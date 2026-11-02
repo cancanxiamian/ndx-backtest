@@ -1,0 +1,1507 @@
+[
+{
+"date": "2025-12-22",
+"added": "ALNY",
+"added_name": "Alnylam Pharmaceuticals",
+"removed": "BIIB",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2025-12-22",
+"added": "FER",
+"added_name": "Ferrovial SE",
+"removed": "CDW",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2025-12-22",
+"added": "INSM",
+"added_name": "Insmed Incorporated",
+"removed": "GFS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2025-12-22",
+"added": "MPWR",
+"added_name": "Monolithic Power Systems",
+"removed": "LULU",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2025-12-22",
+"added": "STX",
+"added_name": "Seagate Technology Holdings",
+"removed": "ON",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2025-12-22",
+"added": "WDC",
+"added_name": "Western Digital",
+"removed": "TTD",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2025-11-06",
+"added": "",
+"added_name": "",
+"removed": "SOLS",
+"reason": "Solstice Advanced Materials did not meet the minimum monthly weight requirement."
+},
+{
+"date": "2025-10-30",
+"added": "SOLS",
+"added_name": "Solstice Advanced Materials",
+"removed": "",
+"reason": "[[Solstice Advanced Materials]] was spun off from [[Honeywell]]."
+},
+{
+"date": "2025-07-28",
+"added": "TRI",
+"added_name": "Thomson Reuters",
+"removed": "",
+"reason": "[[Thomson Reuters]] replaced Ansys in the index."
+},
+{
+"date": "2025-07-17",
+"added": "",
+"added_name": "",
+"removed": "ANSS",
+"reason": "Ansys was acquired by [[Synopsys]]."
+},
+{
+"date": "2025-05-19",
+"added": "SHOP",
+"added_name": "Shopify",
+"removed": "MDB",
+"reason": "MongoDB did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2024-12-23",
+"added": "PLTR",
+"added_name": "Palantir Technologies",
+"removed": "ILMN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2024-12-23",
+"added": "MSTR",
+"added_name": "MicroStrategy",
+"removed": "MRNA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2024-12-23",
+"added": "AXON",
+"added_name": "Axon Enterprise",
+"removed": "SMCI",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2024-11-18",
+"added": "APP",
+"added_name": "AppLovin",
+"removed": "DLTR",
+"reason": "Dollar Tree did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2024-07-22",
+"added": "SMCI",
+"added_name": "Supermicro",
+"removed": "WBA",
+"reason": "WBA did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2024-06-24",
+"added": "ARM",
+"added_name": "Arm Holdings",
+"removed": "SIRI",
+"reason": "Sirius XM did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2024-03-18",
+"added": "LIN",
+"added_name": "Linde",
+"removed": "SPLK",
+"reason": "Splunk was acquired by [[Cisco]]."
+},
+{
+"date": "2023-12-18",
+"added": "CDW",
+"added_name": "CDW",
+"removed": "ALGN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2023-12-18",
+"added": "CCEP",
+"added_name": "Coca-Cola Europacific Partners",
+"removed": "EBAY",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2023-12-18",
+"added": "DASH",
+"added_name": "DoorDash",
+"removed": "ENPH",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2023-12-18",
+"added": "MDB",
+"added_name": "MongoDB",
+"removed": "JD",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2023-12-18",
+"added": "ROP",
+"added_name": "Roper Technologies",
+"removed": "LCID",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2023-12-18",
+"added": "SPLK",
+"added_name": "Splunk",
+"removed": "ZM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2023-12-14",
+"added": "TTWO",
+"added_name": "Take-Two Interactive",
+"removed": "SGEN",
+"reason": "Seagen merged with [[Pfizer]]."
+},
+{
+"date": "2023-07-17",
+"added": "TTD",
+"added_name": "The Trade Desk",
+"removed": "ATVI",
+"reason": "[[Activision Blizzard]] was acquired by [[Microsoft]]."
+},
+{
+"date": "2023-06-20",
+"added": "ON",
+"added_name": "Onsemi",
+"removed": "RIVN",
+"reason": "Rivian did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2023-06-07",
+"added": "GEHC",
+"added_name": "GE HealthCare",
+"removed": "FI",
+"reason": "[[Fiserv]] transferred its listing from [[Nasdaq|NASDAQ]] to the [[New York Stock Exchange|NYSE]]."
+},
+{
+"date": "2022-12-19",
+"added": "CSGP",
+"added_name": "CoStar Group",
+"removed": "VRSN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2022-12-19",
+"added": "RIVN",
+"added_name": "Rivian Automotive",
+"removed": "SWKS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2022-12-19",
+"added": "",
+"added_name": "",
+"removed": "NTES",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2022-12-19",
+"added": "WBD",
+"added_name": "Warner Bros. Discovery",
+"removed": "SPLK",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2022-12-19",
+"added": "GFS",
+"added_name": "GlobalFoundries",
+"removed": "BIDU",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2022-12-19",
+"added": "BKR",
+"added_name": "Baker Hughes",
+"removed": "MTCH",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2022-12-19",
+"added": "FANG",
+"added_name": "Diamondback Energy",
+"removed": "DOCU",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2022-11-21",
+"added": "ENPH",
+"added_name": "Enphase Energy",
+"removed": "OKTA",
+"reason": "Okta did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2022-02-22",
+"added": "AZN",
+"added_name": "AstraZeneca",
+"removed": "XLNX",
+"reason": "[[Xilinx]] was acquired by [[Advanced Micro Devices|AMD]]."
+},
+{
+"date": "2022-02-02",
+"added": "CEG",
+"added_name": "Constellation Energy",
+"removed": "",
+"reason": "Component member [[Exelon]] spun off [[Constellation Energy]]."
+},
+{
+"date": "2022-01-24",
+"added": "ODFL",
+"added_name": "Old Dominion Freight Line",
+"removed": "PTON",
+"reason": "Peloton did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2021-12-20",
+"added": "ABNB",
+"added_name": "Airbnb",
+"removed": "CDW",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2021-12-20",
+"added": "FTNT",
+"added_name": "Fortinet",
+"removed": "FOXA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2021-12-20",
+"added": "",
+"added_name": "",
+"removed": "FOX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2021-12-20",
+"added": "PANW",
+"added_name": "Palo Alto Networks",
+"removed": "CERN",
+"reason": "Annual index reconstitution. Cerner was acquired by [[Oracle Corporation]] and rebranded as Oracle Health."
+},
+{
+"date": "2021-12-20",
+"added": "LCID",
+"added_name": "Lucid Group",
+"removed": "CHKP",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2021-12-20",
+"added": "ZS",
+"added_name": "Zscaler",
+"removed": "TCOM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2021-12-20",
+"added": "DDOG",
+"added_name": "Datadog",
+"removed": "INCY",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2021-08-26",
+"added": "CRWD",
+"added_name": "Crowdstrike",
+"removed": "MXIM",
+"reason": "Maxim Integrated Products was acquired by [[Analog Devices]]."
+},
+{
+"date": "2021-07-21",
+"added": "HON",
+"added_name": "Honeywell",
+"removed": "ALXN",
+"reason": "Alexion Pharmaceuticals was acquired by [[AstraZeneca]]."
+},
+{
+"date": "2020-12-21",
+"added": "AEP",
+"added_name": "American Electric Power",
+"removed": "BMRN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2020-12-21",
+"added": "MRVL",
+"added_name": "Marvell Technology",
+"removed": "CTXS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2020-12-21",
+"added": "MTCH",
+"added_name": "Match Group",
+"removed": "EXPE",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2020-12-21",
+"added": "OKTA",
+"added_name": "Okta",
+"removed": "LBTYA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2020-12-21",
+"added": "",
+"added_name": "",
+"removed": "LBTYK",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2020-12-21",
+"added": "PTON",
+"added_name": "Peloton",
+"removed": "TTWO",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2020-12-21",
+"added": "TEAM",
+"added_name": "Atlassian",
+"removed": "ULTA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2020-10-19",
+"added": "KDP",
+"added_name": "Keurig Dr Pepper",
+"removed": "WDC",
+"reason": "Western Digital did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2020-08-24",
+"added": "PDD",
+"added_name": "Pinduoduo",
+"removed": "NTAP",
+"reason": "NetApp did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2020-07-20",
+"added": "MRNA",
+"added_name": "Moderna",
+"removed": "CSGP",
+"reason": "CoStar did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2020-06-22",
+"added": "DOCU",
+"added_name": "DocuSign",
+"removed": "UAL",
+"reason": "United Airlines did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2020-04-30",
+"added": "ZM",
+"added_name": "Zoom Video Communications",
+"removed": "WTW",
+"reason": "WTW did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2020-04-20",
+"added": "DXCM",
+"added_name": "Dexcom",
+"removed": "AAL",
+"reason": "American Airlines did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2019-12-23",
+"added": "ANSS",
+"added_name": "Ansys",
+"removed": "HAS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2019-12-23",
+"added": "CDW",
+"added_name": "CDW",
+"removed": "HSIC",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2019-12-23",
+"added": "CPRT",
+"added_name": "Copart",
+"removed": "JBHT",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2019-12-23",
+"added": "CSGP",
+"added_name": "CoStar Group",
+"removed": "MYL",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2019-12-23",
+"added": "SGEN",
+"added_name": "Seattle Genetics",
+"removed": "NLOK",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2019-12-23",
+"added": "SPLK",
+"added_name": "Splunk",
+"removed": "WYNN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2019-11-21",
+"added": "EXC",
+"added_name": "Exelon",
+"removed": "CELG",
+"reason": "[[Celgene]] was acquired by [[Bristol-Myers Squibb]]."
+},
+{
+"date": "2019-03-19",
+"added": "FOXA",
+"added_name": "Fox Corporation Class A",
+"removed": "TCFCA",
+"reason": "Two classes of stock of [[Fox Corporation]] replaced the two classes of stock of [[21st Century Fox]], which was acquire"
+},
+{
+"date": "2019-03-19",
+"added": "FOX",
+"added_name": "Fox Corporation Class B",
+"removed": "TCFCB",
+"reason": "Two classes of stock of [[Fox Corporation]] replaced the two classes of stock of [[21st Century Fox]], which was acquire"
+},
+{
+"date": "2018-12-24",
+"added": "AMD",
+"added_name": "Advanced Micro Devices",
+"removed": "ESRX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2018-12-24",
+"added": "LULU",
+"added_name": "lululemon Athletica",
+"removed": "HOLX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2018-12-24",
+"added": "NTAP",
+"added_name": "NetApp",
+"removed": "QRTEA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2018-12-24",
+"added": "UAL",
+"added_name": "United Continental Holdings",
+"removed": "SHPG",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2018-12-24",
+"added": "VRSN",
+"added_name": "Verisign",
+"removed": "STX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2018-12-24",
+"added": "WLTW",
+"added_name": "Willis Towers Watson",
+"removed": "VOD",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2018-11-19",
+"added": "XEL",
+"added_name": "Xcel Energy",
+"removed": "XRAY",
+"reason": "Dentsply Sirona did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2018-11-05",
+"added": "NXPI",
+"added_name": "NXP Semiconductors",
+"removed": "CA",
+"reason": "NXP Semiconductors rejoined the index following its failed acquisition by [[Qualcomm]]. CA Inc. merged with [[Broadcom]]"
+},
+{
+"date": "2018-07-23",
+"added": "PEP",
+"added_name": "PepsiCo",
+"removed": "DISH",
+"reason": "Dish Network did not meet the minimum monthly weight requirement."
+},
+{
+"date": "2017-12-18",
+"added": "ASML",
+"added_name": "ASML Holding",
+"removed": "AKAM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2017-12-18",
+"added": "CDNS",
+"added_name": "Cadence Design Systems",
+"removed": "DISCA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2017-12-18",
+"added": "",
+"added_name": "",
+"removed": "DISCK",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2017-12-18",
+"added": "SNPS",
+"added_name": "Synopsys",
+"removed": "NCLH",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2017-12-18",
+"added": "TTWO",
+"added_name": "Take-Two Interactive",
+"removed": "TSCO",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2017-12-18",
+"added": "WDAY",
+"added_name": "Workday",
+"removed": "VIAB",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2017-10-23",
+"added": "ALGN",
+"added_name": "Align Technology",
+"removed": "MAT",
+"reason": "Mattel did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2017-06-19",
+"added": "MELI",
+"added_name": "MercadoLibre",
+"removed": "YHOO",
+"reason": "Yahoo! Inc. was acquired by [[Verizon]] and subsequently converted to a closed-end fund."
+},
+{
+"date": "2017-04-24",
+"added": "WYNN",
+"added_name": "Wynn Resorts",
+"removed": "TRIP",
+"reason": "TripAdvisor did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2017-03-20",
+"added": "IDXX",
+"added_name": "Idexx Laboratories",
+"removed": "SBAC",
+"reason": "SBA converted into a [[real estate investment trust]], making it ineligible for inclusion in the Nasdaq-100, but it beca"
+},
+{
+"date": "2017-02-07",
+"added": "JBHT",
+"added_name": "J.B. Hunt",
+"removed": "NXPI",
+"reason": "NXP was in the process of merging with Qualcomm."
+},
+{
+"date": "2016-12-19",
+"added": "CTAS",
+"added_name": "Cintas",
+"removed": "BBBY",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2016-12-19",
+"added": "HAS",
+"added_name": "Hasbro",
+"removed": "NTAP",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2016-12-19",
+"added": "HOLX",
+"added_name": "Hologic",
+"removed": "SRCL",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2016-12-19",
+"added": "KLAC",
+"added_name": "KLA-Tencor",
+"removed": "WFM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2016-10-19",
+"added": "SHPG",
+"added_name": "Shire PLC",
+"removed": "LLTC",
+"reason": "Linear Technology did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2016-07-18",
+"added": "MCHP",
+"added_name": "Microchip Technology",
+"removed": "NDOI",
+"reason": "Endo International did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2016-06-20",
+"added": "XRAY",
+"added_name": "Dentsply Sirona",
+"removed": "LMCA",
+"reason": "Liberty Media did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2016-06-20",
+"added": "",
+"added_name": "",
+"removed": "LMCK",
+"reason": "Liberty Media did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2016-06-20",
+"added": "",
+"added_name": "",
+"removed": "BATRA",
+"reason": "Liberty Media did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2016-06-20",
+"added": "",
+"added_name": "",
+"removed": "BATRK",
+"reason": "Liberty Media did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2016-04-18",
+"added": "BATRA",
+"added_name": "Liberty Media",
+"removed": "",
+"reason": "[[Liberty Media]] established two tracking stocks to follow the performance of its investment in the [[Atlanta Braves]]."
+},
+{
+"date": "2016-04-18",
+"added": "BATRK",
+"added_name": "Liberty Media",
+"removed": "",
+"reason": "[[Liberty Media]] established two tracking stocks to follow the performance of its investment in the [[Atlanta Braves]]."
+},
+{
+"date": "2016-03-16",
+"added": "NTES",
+"added_name": "NetEase",
+"removed": "SNDK",
+"reason": "SanDisk was acquired by [[Western Digital]]."
+},
+{
+"date": "2016-02-16",
+"added": "CSX",
+"added_name": "CSX Corporation",
+"removed": "KLAC",
+"reason": "KLA-Tencor did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2016-02-01",
+"added": "AVGO",
+"added_name": "Broadcom",
+"removed": "",
+"reason": "Avago Technologies changed its name to [[Broadcom]]. Former ticker BRCM retired."
+},
+{
+"date": "2015-12-21",
+"added": "CTRP",
+"added_name": "Ctrip",
+"removed": "CHRW",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2015-12-21",
+"added": "ENDP",
+"added_name": "Endo International",
+"removed": "EXPD",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2015-12-21",
+"added": "EXPE",
+"added_name": "Expedia Group",
+"removed": "GMCR",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2015-12-21",
+"added": "MXIM",
+"added_name": "Maxim Integrated Products",
+"removed": "GRMN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2015-12-21",
+"added": "NCLH",
+"added_name": "Norwegian Cruise Line",
+"removed": "SPLS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2015-12-21",
+"added": "TMUS",
+"added_name": "T-Mobile US",
+"removed": "VIP",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2015-12-21",
+"added": "ULTA",
+"added_name": "Ulta Beauty",
+"removed": "WYNN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2015-12-21",
+"added": "",
+"added_name": "",
+"removed": "LILA",
+"reason": "[[Liberty Media]] tracking stocks were removed from the index."
+},
+{
+"date": "2015-12-21",
+"added": "",
+"added_name": "",
+"removed": "LILAK",
+"reason": "[[Liberty Media]] tracking stocks were removed from the index."
+},
+{
+"date": "2015-11-11",
+"added": "PYPL",
+"added_name": "PayPal",
+"removed": "BRCM",
+"reason": "[[Broadcom]] was in the process of merging with Avago."
+},
+{
+"date": "2015-10-07",
+"added": "INCY",
+"added_name": "Incyte",
+"removed": "ALTR",
+"reason": "[[Altera]] merged with Intel."
+},
+{
+"date": "2015-08-03",
+"added": "SWKS",
+"added_name": "Skyworks Solutions",
+"removed": "",
+"reason": "[[Skyworks Solutions]] replaced Sigma-Aldrich in the index."
+},
+{
+"date": "2015-07-31",
+"added": "",
+"added_name": "",
+"removed": "SIAL",
+"reason": "[[Sigma-Aldrich]] was acquired by [[Merck KGaA]]."
+},
+{
+"date": "2015-07-29",
+"added": "JD",
+"added_name": "JD.com",
+"removed": "",
+"reason": "JD.com replaced Catamaran Corporation in the index."
+},
+{
+"date": "2015-07-27",
+"added": "BMRN",
+"added_name": "BioMarin Pharmaceutical",
+"removed": "",
+"reason": "BioMarin replaced DirecTV in the index."
+},
+{
+"date": "2015-07-24",
+"added": "",
+"added_name": "",
+"removed": "DTV",
+"reason": "[[DirecTV]] was acquired by [[AT&T]]."
+},
+{
+"date": "2015-07-24",
+"added": "",
+"added_name": "",
+"removed": "CTRX",
+"reason": "Catamaran Corporation went private."
+},
+{
+"date": "2015-07-02",
+"added": "KHC",
+"added_name": "Kraft Heinz",
+"removed": "KRFT",
+"reason": "Kraft Foods merged with [[Heinz]], becoming [[Kraft Heinz]]"
+},
+{
+"date": "2015-07-02",
+"added": "LILA",
+"added_name": "Liberty Latin America Class A",
+"removed": "",
+"reason": "[[Liberty Interactive]] created two new tracking stocks, tracking the company's interests in Latin America."
+},
+{
+"date": "2015-07-02",
+"added": "LILAK",
+"added_name": "Liberty Latin America Class C",
+"removed": "",
+"reason": "[[Liberty Interactive]] created two new tracking stocks, tracking the company's interests in Latin America."
+},
+{
+"date": "2015-03-23",
+"added": "WBA",
+"added_name": "Walgreens Boots Alliance",
+"removed": "EQIX",
+"reason": "Equinix converted into a [[real estate investment trust]], making it ineligible for inclusion in the Nasdaq-100, but it "
+},
+{
+"date": "2014-12-22",
+"added": "AAL",
+"added_name": "American Airlines Group",
+"removed": "EXPE",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2014-12-22",
+"added": "EA",
+"added_name": "Electronic Arts",
+"removed": "FFIV",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2014-12-22",
+"added": "LRCX",
+"added_name": "Lam Research",
+"removed": "MXIM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2014-12-22",
+"added": "CMCSK",
+"added_name": "Comcast Corporation Class A",
+"removed": "",
+"reason": "[[Nasdaq|NASDAQ]] revised the index methodology allowing multiple share classes of index participants to be included."
+},
+{
+"date": "2014-12-22",
+"added": "FOX",
+"added_name": "Twenty-First Century Fox, Inc. Class B",
+"removed": "",
+"reason": "[[Nasdaq|NASDAQ]] revised the index methodology allowing multiple share classes of index participants to be included."
+},
+{
+"date": "2014-12-22",
+"added": "LBTYK",
+"added_name": "Liberty Global PLC",
+"removed": "",
+"reason": "[[Nasdaq|NASDAQ]] revised the index methodology allowing multiple share classes of index participants to be included."
+},
+{
+"date": "2014-04-03",
+"added": "GOOG",
+"added_name": "Google Class C",
+"removed": "",
+"reason": "Class C common stock of [[Google]] was added to the index as a result of Google's stock split."
+},
+{
+"date": "2013-12-23",
+"added": "DISH",
+"added_name": "DISH Network Corporation",
+"removed": "FOSL",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2013-12-23",
+"added": "ILMN",
+"added_name": "Illumina",
+"removed": "MCHP",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2013-12-23",
+"added": "NXPI",
+"added_name": "NXP Semiconductors",
+"removed": "NUAN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2013-12-23",
+"added": "TRIP",
+"added_name": "TripAdvisor",
+"removed": "SHLD",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2013-12-23",
+"added": "TSCO",
+"added_name": "Tractor Supply Company",
+"removed": "XRAY",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2013-11-18",
+"added": "MAR",
+"added_name": "Marriott International",
+"removed": "GOLD",
+"reason": "Randgold Resources did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2013-10-29",
+"added": "VIP",
+"added_name": "VimpelCom",
+"removed": "DELL",
+"reason": "Dell Inc. was taken private."
+},
+{
+"date": "2013-08-22",
+"added": "GMCR",
+"added_name": "Green Mountain Coffee Roasters",
+"removed": "LIFE",
+"reason": "Life Technologies was in the process of merging with Thermo Fisher Scientific."
+},
+{
+"date": "2013-07-25",
+"added": "CHTR",
+"added_name": "Charter Communications",
+"removed": "BMC",
+"reason": "[[BMC Software]] was taken private."
+},
+{
+"date": "2013-07-15",
+"added": "TSLA",
+"added_name": "Tesla Motors",
+"removed": "ORCL",
+"reason": "Oracle transferred its listing from NASDAQ to NYSE."
+},
+{
+"date": "2013-06-06",
+"added": "NFLX",
+"added_name": "Netflix",
+"removed": "PRGO",
+"reason": "Perrigo transferred its listing from NASDAQ to NYSE."
+},
+{
+"date": "2013-06-05",
+"added": "LMCA",
+"added_name": "Liberty Media",
+"removed": "VMED",
+"reason": "[[Virgin Media]] merged with [[Liberty Media]]."
+},
+{
+"date": "2013-03-18",
+"added": "KRFT",
+"added_name": "Kraft Foods",
+"removed": "STRZA",
+"reason": "Starz did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2013-01-15",
+"added": "STRZA",
+"added_name": "Starz",
+"removed": "LMCA",
+"reason": "[[Starz Inc.|Starz]] replaced [[Liberty Media]] after a spinoff."
+},
+{
+"date": "2012-12-24",
+"added": "ADI",
+"added_name": "Analog Devices",
+"removed": "APOL",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "CTRX",
+"added_name": "Catamaran Corporation",
+"removed": "EA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "DISCA",
+"added_name": "Discovery Communications",
+"removed": "FLEX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "EQIX",
+"added_name": "Equinix",
+"removed": "GMCR",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "LBTYA",
+"added_name": "Liberty Global",
+"removed": "LRCX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "LMCA",
+"added_name": "Liberty Media",
+"removed": "MRVL",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "REGN",
+"added_name": "Regeneron Pharmaceuticals",
+"removed": "NFLX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "SBAC",
+"added_name": "SBA Communications",
+"removed": "RIMM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "VRSK",
+"added_name": "Verisk Analytics",
+"removed": "VRSN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-24",
+"added": "WDC",
+"added_name": "Western Digital",
+"removed": "WCRX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2012-12-12",
+"added": "FB",
+"added_name": "Facebook, Inc.",
+"removed": "INFY",
+"reason": "Infosys transferred its listing from NASDAQ to NYSE."
+},
+{
+"date": "2012-07-23",
+"added": "KFT",
+"added_name": "Kraft Foods",
+"removed": "CTRP",
+"reason": "Ctrip did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2012-05-30",
+"added": "VIAB",
+"added_name": "Viacom",
+"removed": "TEVA",
+"reason": "Teva transferred its listing from NASDAQ to NYSE."
+},
+{
+"date": "2012-04-23",
+"added": "TXN",
+"added_name": "Texas Instruments",
+"removed": "FSLR",
+"reason": "First Solar did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2011-12-19",
+"added": "AVGO",
+"added_name": "Avago Technologies",
+"removed": "FLIR",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2011-12-19",
+"added": "FOSL",
+"added_name": "Fossil Group",
+"removed": "ILMN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2011-12-19",
+"added": "HANS",
+"added_name": "Hansen Natural",
+"removed": "NIHD",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2011-12-19",
+"added": "NUAN",
+"added_name": "Nuance Communications",
+"removed": "QGEN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2011-12-19",
+"added": "GOLD",
+"added_name": "Randgold Resources",
+"removed": "URBN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2011-12-06",
+"added": "PRGO",
+"added_name": "Perrigo",
+"removed": "JOYG",
+"reason": "Joy Global transferred its listing from NASDAQ to NYSE."
+},
+{
+"date": "2011-07-15",
+"added": "SIRI",
+"added_name": "Sirius XM Radio",
+"removed": "CEPH",
+"reason": "Cephalon was acquired by [[Teva Pharmaceutical Industries]]."
+},
+{
+"date": "2011-05-27",
+"added": "GMCR",
+"added_name": "Green Mountain Coffee Roasters",
+"removed": "MICC",
+"reason": "Millicom consolidated its primary listing to NASDAQ OMX Stockholm, withdrawing the NASDAQ US listing."
+},
+{
+"date": "2011-04-04",
+"added": "ALXN",
+"added_name": "Alexion Pharmaceuticals",
+"removed": "GENZ",
+"reason": "Genzyme was acquired by [[Sanofi-Aventis]]."
+},
+{
+"date": "2010-12-20",
+"added": "AKAM",
+"added_name": "Akamai Technologies",
+"removed": "CTAS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2010-12-20",
+"added": "CTRP",
+"added_name": "Ctrip",
+"removed": "DISH",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2010-12-20",
+"added": "DLTR",
+"added_name": "Dollar Tree",
+"removed": "FWLT",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2010-12-20",
+"added": "FFIV",
+"added_name": "F5 Networks",
+"removed": "HOLX",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2010-12-20",
+"added": "MU",
+"added_name": "Micron Technology",
+"removed": "JBHT",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2010-12-20",
+"added": "NFLX",
+"added_name": "Netflix",
+"removed": "LOGI",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2010-12-20",
+"added": "WFMI",
+"added_name": "Whole Foods Market",
+"removed": "PDCO",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-12-21",
+"added": "VOD",
+"added_name": "Vodafone",
+"removed": "AKAM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-12-21",
+"added": "MAT",
+"added_name": "Mattel",
+"removed": "HANS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-12-21",
+"added": "BMC",
+"added_name": "BMC Software",
+"removed": "IACI",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-12-21",
+"added": "MYL",
+"added_name": "Mylan",
+"removed": "LBTYA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-12-21",
+"added": "QGEN",
+"added_name": "Qiagen",
+"removed": "PPDI",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-12-21",
+"added": "SNDK",
+"added_name": "SanDisk",
+"removed": "RYAAY",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-12-21",
+"added": "VMED",
+"added_name": "Virgin Media",
+"removed": "STLD",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2009-10-29",
+"added": "PCLN",
+"added_name": "Priceline.com",
+"removed": "JNPR",
+"reason": "Joy Global transferred its listing from NASDAQ to NYSE."
+},
+{
+"date": "2009-07-17",
+"added": "CERN",
+"added_name": "Cerner",
+"removed": "JAVA",
+"reason": "Sun Microsystems was acquired by [[Oracle Corporation|Oracle]]."
+},
+{
+"date": "2009-01-20",
+"added": "NWSA",
+"added_name": "News Corporation",
+"removed": "FMCN",
+"reason": "Focus Media did not meet the minimum monthly weight requirements."
+},
+{
+"date": "2008-12-22",
+"added": "ADP",
+"added_name": "Automatic Data Processing",
+"removed": "AMLN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "FSLR",
+"added_name": "First Solar",
+"removed": "CDNS",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "LIFE",
+"added_name": "Life Technologies",
+"removed": "DISCA",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "ROST",
+"added_name": "Ross Stores",
+"removed": "LAMR",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "MXIM",
+"added_name": "Maxim Integrated Products",
+"removed": "LEAP",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "ILMN",
+"added_name": "Illumina",
+"removed": "LVLT",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "PPDI",
+"added_name": "Pharmaceutical Product Development",
+"removed": "PETM",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "ORLY",
+"added_name": "O'Reilly Auto Parts",
+"removed": "SIRI",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "URBN",
+"added_name": "Urban Outfitters",
+"removed": "SNDK",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "JBHT",
+"added_name": "J. B. Hunt",
+"removed": "VMED",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-12-22",
+"added": "WCRX",
+"added_name": "Warner Chilcott",
+"removed": "WFMI",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2008-11-10",
+"added": "STX",
+"added_name": "Seagate Technology",
+"removed": "MNST",
+"reason": "Monster did not meet the minimum monthly weighting requirements."
+},
+{
+"date": "2008-07-21",
+"added": "FLIR",
+"added_name": "FLIR Systems",
+"removed": "UAUA",
+"reason": "UAL did not meet the minimum monthly weighting requirements."
+},
+{
+"date": "2008-05-19",
+"added": "CA",
+"added_name": "CA Technologies",
+"removed": "TLAB",
+"reason": "Tellabs did not meet the minimum monthly weighting requirements."
+},
+{
+"date": "2008-04-30",
+"added": "DTV",
+"added_name": "DirecTV",
+"removed": "BEAS",
+"reason": "BEA Systems was acquired by Oracle."
+},
+{
+"date": "2007-12-24",
+"added": "HOLX",
+"added_name": "Hologic",
+"removed": "ERIC",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2007-12-24",
+"added": "FMCN",
+"added_name": "Focus Media",
+"removed": "PTEN",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2007-12-24",
+"added": "HANS",
+"added_name": "Hansen Natural",
+"removed": "ROST",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2007-12-24",
+"added": "STLD",
+"added_name": "Steel Dynamics",
+"removed": "SEPR",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2007-12-24",
+"added": "SRCL",
+"added_name": "Stericycle",
+"removed": "XMSR",
+"reason": "Annual index reconstitution."
+},
+{
+"date": "2007-12-04",
+"added": "BIDU",
+"added_name": "Baidu.com, Inc.",
+"removed": "CKFR",
+"reason": "CheckFree was acquired by [[Fiserv]]."
+},
+{
+"date": "2007-10-08",
+"added": "LEAP",
+"added_name": "Leap Wireless International",
+"removed": "CDWC",
+"reason": "CDW was taken private."
+},
+{
+"date": "2007-08-27",
+"added": "VMED",
+"added_name": "Virgin Media",
+"removed": "NLTI",
+"reason": "NTL Incorporated was merged into Virgin Media."
+},
+{
+"date": "2007-07-12",
+"added": "FWLT",
+"added_name": "Foster Wheeler",
+"removed": "BMET",
+"reason": "Biomet was taken private."
+},
+{
+"date": "2007-06-01",
+"added": "CEPH",
+"added_name": "Cephalon",
+"removed": "MEDI",
+"reason": "MedImmune was acquired by [[AstraZeneca]]."
+},
+{
+"date": "2007-03-08",
+"added": "UAUA",
+"added_name": "UAL Corporation",
+"removed": "AEOS",
+"reason": "American Eagle Outfitters transferred its listing from NASDAQ to NYSE."
+},
+{
+"date": "2007-02-14",
+"added": "RYAAY",
+"added_name": "Ryanair",
+"removed": "APCC",
+"reason": "APC was acquired by [[Schneider Electric]]."
+},
+{
+"date": "2007-02-01",
+"added": "LOGI",
+"added_name": "Logitech",
+"removed": "CMVT",
+"reason": "Comverse did not meet the minimum monthly weighting requirements."
+}
+]
