@@ -54,12 +54,21 @@
 .mo .page { display: grid; gap: var(--cds-gap-xl); }
 .mo .tk { font-weight: 600; }
 .mo .join { color: var(--color-fg-muted); }
+.mo .warnbox { border: 1px solid var(--color-warn); border-left-width: 4px; border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: var(--cds-gap-xs); line-height: 1.6; max-width: 80ch; }
+.mo .warnbox h2 { color: var(--color-warn); font-size: var(--cds-font-size-body); }
+.mo .flag { color: var(--color-warn); font-weight: 600; }
+.mo td.act { text-align: left; white-space: nowrap; }
+.mo .pill.half { color: var(--color-warn); border-color: currentColor; }
+.mo .pill.stop { color: var(--color-bad); border-color: currentColor; }
+.mo .pill.nod { color: var(--color-warn); border-color: currentColor; font-weight: 600; }
+.mo .pill + .pill { margin-left: 4px; }
 </style>
 
 <div class="mo">
   <nav class="tabs" role="tablist" aria-label="策略">
     <button type="button" role="tab" id="tab-top10" aria-controls="p-top10" aria-selected="true">策略一：前十等权</button>
     <button type="button" role="tab" id="tab-top1" aria-controls="p-top1" aria-selected="false">策略二：全仓第一名</button>
+    <button type="button" role="tab" id="tab-top3" aria-controls="p-top3" aria-selected="false">策略三：前三 + 卖出规则</button>
   </nav>
   <div class="page" id="p-top10" role="tabpanel" aria-labelledby="tab-top10">
   <header class="head" id="top">
@@ -201,6 +210,99 @@
         <li>排序用选股年全年涨幅，也就是上一年最后一个交易日到当年最后一个交易日。当年才上市或分拆、没有完整一年价格的公司（如 2012 年的 Facebook、2022 年的 Constellation Energy）无法比较，不参与排序。</li>
         <li>同一家公司的两类股票只算一次。已经退市的公司不能买，跳过取下一名。</li>
         <li>价格来源、退市和收购的处理方式和策略一相同，不计交易费用和税。</li>
+        <li>这是历史数据的回测，不代表未来收益，也不构成投资建议。</li>
+      </ol>
+    </section>
+  </template>
+  <div class="page" id="p-top3" role="tabpanel" aria-labelledby="tab-top3" hidden></div>
+  <template id="tpl-top3">
+    <header class="head">
+      <h1>前三等权，加回撤减半和止损</h1>
+      <p class="lede">规则：每年年初，从上一年任何时候在纳斯达克100里的公司中（口径同策略二），选上一年涨幅最大的 3 只，资金平分买入。持有期间每天看收盘价：某只股票从买入后的最高收盘价回撤超过 20%，按当天收盘价卖出它当前持仓的一半，每只股票每年最多一次；收盘价比买入价低超过 8%，按当天收盘价卖出它剩下的全部持仓（减半之后也适用）。卖出的钱留作现金，不计利息，不再加仓。年末全部卖出，次年年初重复。不计手续费和税。</p>
+      <p class="take dash-skeleton" id="t3-take">—</p>
+    </header>
+    <section class="warnbox" id="t3-nodaily">
+      <h2>有持仓找不到日线数据</h2>
+      <p id="t3-nodaily-text">—</p>
+    </section>
+    <section class="tiles" aria-label="策略三汇总">
+      <div class="tile"><span class="k">1 单位滚动 15 年后 · 策略三</span><span class="v dash-skeleton" data-source="s3_summary" data-field="s3_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="s3_cagr">—</span></span></div>
+      <div class="tile"><span class="k">对照：前三等权，不带卖出规则</span><span class="v dash-skeleton" data-source="s3_summary" data-field="plain_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="plain_cagr">—</span></span></div>
+      <div class="tile"><span class="k">策略一：前十等权</span><span class="v dash-skeleton" data-source="s3_summary" data-field="s1_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="s1_cagr">—</span></span></div>
+      <div class="tile"><span class="k">策略二：全仓第一名</span><span class="v dash-skeleton" data-source="s3_summary" data-field="s2_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="s2_cagr">—</span></span></div>
+      <div class="tile"><span class="k">QQQ（含分红）</span><span class="v dash-skeleton" data-source="s3_summary" data-field="qqq_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="qqq_cagr">—</span></span></div>
+      <div class="tile"><span class="k">策略三跑赢 QQQ 的年份</span><span class="v"><span class="dash-skeleton" data-source="s3_summary" data-field="win_years">—</span><span id="t3-win-of"></span></span><span class="s">共 15 个完整年份</span></div>
+    </section>
+    <section class="grid">
+      <div class="card" id="t3-growth">
+        <h2>五种做法的账户增长</h2>
+        <p class="note">都从 2010 年底的 1 个单位开始，每年把全部金额投入下一轮。纵轴为对数刻度，同样的高度代表同样的倍数。2026 年截至最新交易日，用虚线表示。</p>
+        <div class="legend" id="t3-lg1"></div>
+        <div class="chart dash-skeleton" id="t3-growth-chart" data-source="s3_cumulative"></div>
+      </div>
+      <div class="card" id="t3-annual">
+        <h2>每年的收益：带规则 vs 不带规则 vs QQQ</h2>
+        <p class="note">同样三只股票，带卖出规则和一直持有到年底的差别。点击某一年，可以在下方看到三只股票各自的触发情况。</p>
+        <div class="legend" id="t3-lg2"></div>
+        <div class="chart dash-skeleton" id="t3-annual-chart" data-source="s3_yearly"></div>
+      </div>
+    </section>
+    <section class="card" id="t3-table">
+      <h2>逐年结果</h2>
+      <p class="note">“规则影响”是策略三减去不带规则的前三等权，负数表示卖出规则让这一年少赚或多亏。“账户年底余额”是 2010 年底投入的 1 个单位按策略三滚动到当年年底的金额。<span class="flag">⚠</span> 表示当年有持仓没有日线数据。</p>
+      <div class="tablewrap">
+        <table id="t3-ytbl" data-source="s3_yearly" data-row-key="hold_year">
+          <thead><tr>
+            <th class="l" data-field="hold_year">持有年份</th>
+            <th class="l" data-source="s3_year_actions" data-field="picks">三只股票和触发情况</th>
+            <th data-field="s3_return">策略三</th>
+            <th data-field="top3_plain_return">前三不带规则</th>
+            <th data-source="s3_year_actions" data-field="effect">规则影响</th>
+            <th data-field="qqq_return">QQQ</th>
+            <th data-field="s1_return">策略一</th>
+            <th data-field="s2_return">策略二</th>
+            <th data-source="s3_cumulative" data-field="s3_value">账户年底余额</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card" id="t3-picks">
+      <h2>每只股票的卖出记录</h2>
+      <div class="years" id="t3-yearbtns" role="group" aria-label="选择持有年份"></div>
+      <div class="yearsum" id="t3-yearsum"></div>
+      <p class="note">“较买入价”“较高点”都是相对比例：买入价是上一年最后一个交易日的收盘价，高点是买入后的最高收盘价。止损按收盘价判断，跳空低开时卖出价会比 −8% 低得多。</p>
+      <div class="tablewrap">
+        <table id="t3-ptbl" data-source="s3_picks" data-row-key="hold_year,ticker">
+          <thead><tr>
+            <th class="l" data-field="rank">排名</th>
+            <th class="l" data-field="ticker">代码</th>
+            <th class="l" data-field="company">公司</th>
+            <th data-field="sel_return">选股年涨幅</th>
+            <th class="l" data-field="action">触发情况</th>
+            <th class="l" data-field="half_date">减半日期</th>
+            <th data-field="half_vs_buy">减半时较买入价</th>
+            <th data-field="half_from_peak">减半时较高点</th>
+            <th class="l" data-field="stop_date">止损日期</th>
+            <th data-field="stop_vs_buy">止损时较买入价</th>
+            <th data-field="rule_return">按规则收益</th>
+            <th data-field="plain_return">一直持有收益</th>
+            <th class="l" data-field="note">备注</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card" id="t3-method">
+      <h2>策略三的口径</h2>
+      <ol class="method">
+        <li>选股：候选公司和策略二相同，是选股年年初的成分股加上当年任何时候加入指数的公司；按选股年全年涨幅排序取前 3 名，同一家公司的两类股票只算一次，已经退市的公司跳过。只用纳斯达克100，不用标普500。</li>
+        <li>价格：Yahoo 财经的日线复权收盘价。买入价是选股年最后一个交易日的收盘价，之后每个交易日按收盘价判断规则，按当天收盘价成交。复权价已经把分红算进去，回撤和止损的比例会因此与不复权的价格略有差别。</li>
+        <li>回撤减半：收盘价低于买入后最高收盘价（包括买入价本身）的 80%，卖出当时持仓的一半，每只股票每年只触发一次。因为止损线是买入价的 92%，只有股价先涨过买入价约 15% 之后，回撤减半才可能先于止损出现。</li>
+        <li>止损：收盘价低于买入价的 92%，卖出剩下的全部持仓，减半之后也适用。同一天两条规则都满足时，结果都是剩余持仓全部卖出。卖出所得留作现金，不计利息，当年不再买入。</li>
+        <li>没有日线的持仓：不套用规则，按全年涨跌计入汇总，并在页面上标出；另外给出“假设开年即以 −8% 止损”的情景作对比。这只是一个情景，不是上下限。</li>
+        <li>对照组“前三等权，不带卖出规则”是同样三只股票一直持有到年底。策略一、策略二和 QQQ 的数字与前两个标签页相同。2026 年截至最新交易日，不计入 15 年汇总。</li>
+        <li>前三名这个数字本身就有运气成分：前二、前四的结果和前三差很多。20% 和 8% 两个参数只测了这一组，没有调参。</li>
         <li>这是历史数据的回测，不代表未来收益，也不构成投资建议。</li>
       </ol>
     </section>
@@ -528,6 +630,321 @@ dash.calc('top1_summary', {
 </script>
 
 <script>
+dash.calc('s3_cumulative', {
+  inputs: ['s3_yearly'],
+  title: '策略三对比的滚动净值',
+  description: '从 2010 年底的 1 个单位开始，每年乘以（1 + 当年收益），策略三、前三不带规则、策略一、策略二、QQQ 各算一条；另算一条把无日线持仓按开年止损 −8% 计的策略三情景。',
+  fn: (s3_yearly) => {
+    const rows = [...s3_yearly].sort((a, b) => a.hold_year - b.hold_year);
+    const K = [['s3_value', 's3_return'], ['plain_value', 'top3_plain_return'], ['s1_value', 's1_return'], ['s2_value', 's2_return'], ['qqq_value', 'qqq_return']];
+    const v = Object.fromEntries(K.map(([k]) => [k, 1])); let alt = 1;
+    const out = [{ hold_year: Number(rows[0].hold_year) - 1, ...v, s3_alt_value: 1, partial: false }];
+    for (const r of rows) {
+      K.forEach(([k, f]) => { v[k] *= 1 + Number(r[f]); });
+      alt *= 1 + Number(r.s3_alt_return === '' || r.s3_alt_return == null ? r.s3_return : r.s3_alt_return);
+      out.push({ hold_year: Number(r.hold_year), ...v, s3_alt_value: alt, partial: String(r.partial).toLowerCase() === 'true' });
+    }
+    return out;
+  }
+});
+
+dash.calc('s3_summary', {
+  inputs: ['s3_yearly', 's3_picks'],
+  title: '策略三 15 年汇总',
+  description: '只用 2011–2025 年的完整年份：逐年收益连乘得到倍数，开 15 次方得到年化；触发次数从逐只股票的记录里数。',
+  fn: (s3_yearly, s3_picks) => {
+    const full = s3_yearly.filter(r => String(r.partial).toLowerCase() !== 'true');
+    const n = full.length;
+    const g = f => full.reduce((a, r) => a * (1 + Number(r[f])), 1);
+    const altG = full.reduce((a, r) => a * (1 + Number(r.s3_alt_return === '' || r.s3_alt_return == null ? r.s3_return : r.s3_alt_return)), 1);
+    const c = x => Math.pow(x, 1 / n) - 1;
+    const by = (f, dir) => full.reduce((a, r) => (dir * Number(r[f]) > dir * Number(a[f]) ? r : a));
+    const ws = by('s3_return', -1), wp = by('top3_plain_return', -1);
+    const fp = s3_picks.filter(p => full.some(r => Number(r.hold_year) === Number(p.hold_year)));
+    const out = {
+      years: n, first_year: Number(full[0].hold_year), last_year: Number(full[n - 1].hold_year),
+      s3_alt_growth: altG, s3_alt_cagr: c(altG),
+      win_years: full.filter(r => Number(r.s3_return) > Number(r.qqq_return)).length,
+      rule_worse_years: full.filter(r => Number(r.s3_return) < Number(r.top3_plain_return)).length,
+      s3_worst_year: Number(ws.hold_year), s3_worst: Number(ws.s3_return),
+      plain_worst_year: Number(wp.hold_year), plain_worst: Number(wp.top3_plain_return),
+      positions: fp.length,
+      n_half: fp.filter(p => String(p.action).includes('减半')).length,
+      n_stop: fp.filter(p => String(p.action).includes('止损')).length,
+      n_none: fp.filter(p => p.action === '未触发').length,
+      n_nodaily: fp.filter(p => p.data === 'no_daily').length
+    };
+    [['s3', 's3_return'], ['plain', 'top3_plain_return'], ['s1', 's1_return'], ['s2', 's2_return'], ['qqq', 'qqq_return']].forEach(([k, f]) => {
+      out[k + '_growth'] = g(f); out[k + '_cagr'] = c(g(f));
+    });
+    return [out];
+  }
+});
+
+dash.calc('s3_year_actions', {
+  inputs: ['s3_yearly', 's3_picks'],
+  title: '策略三每年的触发情况',
+  description: '每个持有年份：三只股票的代码和触发情况，以及策略三减去不带规则的前三等权的差。',
+  fn: (s3_yearly, s3_picks) => s3_yearly.map(r => ({
+    hold_year: r.hold_year,
+    picks: s3_picks.filter(p => Number(p.hold_year) === Number(r.hold_year)).sort((a, b) => a.rank - b.rank)
+      .map(p => p.ticker + ' ' + (p.data === 'no_daily' ? '⚠无日线' : p.action)).join(' · '),
+    effect: Number(r.s3_return) - Number(r.top3_plain_return)
+  }))
+});
+</script>
+
+<script>
+(() => {
+  const { pct, mult, num } = window.moFmt;
+  const root = document.querySelector('.mo');
+  const muted = () => getComputedStyle(root).getPropertyValue('--cds-chart-muted').trim() || '#999';
+  const unskel = (el) => el && el.classList.remove('dash-skeleton');
+  const failLine = (el) => { el.innerHTML = ''; const d = document.createElement('div'); d.className = 'fail'; d.textContent = 'Failed to load'; el.appendChild(d); };
+  const tipAt = (box, tip, x, y) => {
+    const bw = box.clientWidth, tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = x + 12; if (left + tw > bw) left = x - tw - 12; if (left < 0) left = 0;
+    let top = y - th - 8; if (top < 0) top = y + 12;
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  };
+  const isTrue = v => String(v).toLowerCase() === 'true';
+  const N = v => v === '' || v == null ? null : Number(v);
+  const SER = () => [
+    ['s3_value', '策略三', dash.colors[2]], ['plain_value', '前三不带规则', dash.colors[3]],
+    ['s1_value', '策略一', dash.colors[0]], ['s2_value', '策略二', dash.colors[1]], ['qqq_value', 'QQQ', muted()]
+  ];
+  const legend = (id, S) => {
+    const el = document.getElementById(id); el.innerHTML = '';
+    S.forEach(([, n, c]) => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = c; s.append(i, n); el.appendChild(s); });
+  };
+
+  let selected = null, yearRows = [], pickRows = [];
+
+  function drawGrowth5(el, rows) {
+    el.innerHTML = '';
+    const S = SER();
+    const W = el.clientWidth || 600, H = 320;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const all = rows.flatMap(r => S.map(([k]) => r[k]));
+    const y = d3.scaleLog([Math.min(0.8, d3.min(all) * 0.9), d3.max(all) * 1.15], [H - 26, 12]);
+    const ticks = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500].filter(t => t >= y.domain()[0] && t <= y.domain()[1]);
+    const last = rows[rows.length - 1];
+    const probe = svg.append('text').attr('font-size', 12);
+    let lw = 0; ticks.forEach(t => { probe.text(t + '×'); lw = Math.max(lw, probe.node().getComputedTextLength()); });
+    const labels = S.map(([k, n]) => n + ' ' + num(last[k]));
+    let rw = 0; labels.forEach(t => { probe.text(t); rw = Math.max(rw, probe.node().getComputedTextLength()); }); probe.remove();
+    const narrow = W < 520;
+    const m = { l: lw + 10, r: narrow ? 8 : rw + 12 };
+    const x = d3.scaleLinear(d3.extent(rows, r => r.hold_year), [m.l, W - m.r]);
+    svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', m.l).attr('x2', W - m.r)
+      .attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', d => d === 1 ? 'var(--cds-chart-reference)' : 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em')
+      .attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d + '×');
+    const step = W < 520 ? 4 : (W < 760 ? 3 : 2);
+    svg.append('g').selectAll('text').data(rows.map(r => r.hold_year).filter((v, i) => i % step === 0)).join('text')
+      .attr('x', d => x(d)).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d);
+    const pi = rows.findIndex(r => r.partial);
+    const full = pi < 0 ? rows : rows.slice(0, pi), tail = pi < 0 ? [] : rows.slice(pi - 1);
+    S.slice().reverse().forEach(([k, , col], j) => {
+      const main = j === S.length - 1;
+      const line = d3.line().x(r => x(r.hold_year)).y(r => y(r[k]));
+      svg.append('path').datum(full).attr('d', line).attr('fill', 'none').attr('stroke', col).attr('stroke-width', main ? 2.5 : 1.75).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round');
+      if (tail.length) svg.append('path').datum(tail).attr('d', line).attr('fill', 'none').attr('stroke', col).attr('stroke-width', main ? 2.5 : 1.75).attr('stroke-dasharray', '4 4');
+      svg.append('circle').attr('cx', x(last.hold_year)).attr('cy', y(last[k])).attr('r', 3.5).attr('fill', col);
+    });
+    if (!narrow) {
+      const pos = S.map(([k], i) => ({ i, y: y(last[k]) })).sort((a, b) => a.y - b.y);
+      for (let j = 1; j < pos.length; j++) if (pos[j].y - pos[j - 1].y < 15) pos[j].y = pos[j - 1].y + 15;
+      const over = pos[pos.length - 1].y - (H - 30); if (over > 0) pos.forEach(p => p.y -= over);
+      pos.forEach(p => svg.append('text').attr('x', x(last.hold_year) + 8).attr('y', p.y).attr('dy', '0.32em').attr('font-size', 12)
+        .attr('fill', p.i === 0 ? 'var(--color-fg)' : 'var(--color-fg-muted)').text(labels[p.i]));
+    }
+    const tip = d3.select(el).append('div').attr('class', 'tip').style('opacity', 0);
+    const dots = svg.append('g').style('opacity', 0);
+    const ds = S.map(([, , col]) => dots.append('circle').attr('r', 4).attr('fill', col));
+    svg.append('rect').attr('x', m.l).attr('width', W - m.l - m.r).attr('y', 0).attr('height', H - 20).attr('fill', 'transparent')
+      .on('mousemove', ev => {
+        const [px, py] = d3.pointer(ev, el);
+        const r = rows.find(d => d.hold_year === Math.round(x.invert(px))); if (!r) return;
+        S.forEach(([k], i) => ds[i].attr('cx', x(r.hold_year)).attr('cy', y(r[k])));
+        dots.style('opacity', 1);
+        tip.html(''); tip.append('div').attr('class', 't').text(r.hold_year + (r.partial ? ' 年（截至最新）' : ' 年底'));
+        S.forEach(([k, n, c]) => { const row = tip.append('div').attr('class', 'r'); row.append('i').style('background', c); row.append('span').text(n + '  ' + num(r[k]) + ' 单位'); });
+        tip.style('opacity', 1); tipAt(el, tip.node(), px, py);
+      })
+      .on('mouseleave', () => { tip.style('opacity', 0); dots.style('opacity', 0); });
+  }
+
+  function drawAnnual3(el, rows) {
+    el.innerHTML = '';
+    const B = [['s3_return', '策略三', dash.colors[2]], ['top3_plain_return', '前三不带规则', dash.colors[3]], ['qqq_return', 'QQQ', muted()]];
+    const W = el.clientWidth || 600, H = 300;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const vals = rows.flatMap(r => B.map(([k]) => r[k]));
+    const y = d3.scaleLinear([Math.min(0, d3.min(vals)), Math.max(0, d3.max(vals))], [H - 26, 14]).nice();
+    const ticks = y.ticks(6);
+    const probe = svg.append('text').attr('font-size', 12);
+    let lw = 0; ticks.forEach(t => { probe.text(pct(t, 0)); lw = Math.max(lw, probe.node().getComputedTextLength()); }); probe.remove();
+    const m = { l: lw + 10, r: 4 };
+    const x = d3.scaleBand(rows.map(r => r.hold_year), [m.l, W - m.r]).paddingInner(0.2).paddingOuter(0.1);
+    const xi = d3.scaleBand(B.map(b => b[0]), [0, x.bandwidth()]).padding(0.06);
+    svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', m.l).attr('x2', W - m.r)
+      .attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', d => d === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em')
+      .attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => pct(d, 0));
+    const step = W < 520 ? 3 : (W < 760 ? 2 : 1);
+    svg.append('g').selectAll('text').data(rows).join('text').attr('x', r => x(r.hold_year) + x.bandwidth() / 2).attr('y', H - 8)
+      .attr('text-anchor', 'middle').attr('font-size', 12)
+      .attr('fill', r => r.no_daily ? 'var(--color-warn)' : 'var(--color-fg-muted)')
+      .text((r, i) => (i % step === 0 || r.partial || r.no_daily) ? r.hold_year + (r.partial ? '*' : '') + (r.no_daily ? '⚠' : '') : '');
+    B.forEach(([k, , col]) => svg.append('g').selectAll('rect').data(rows).join('rect')
+      .attr('x', r => x(r.hold_year) + xi(k)).attr('width', xi.bandwidth())
+      .attr('y', r => y(Math.max(0, r[k]))).attr('height', r => Math.max(1, Math.abs(y(r[k]) - y(0))))
+      .attr('rx', Math.min(2, xi.bandwidth() / 2)).attr('fill', col).attr('fill-opacity', r => r.partial ? 0.5 : 1));
+    const tip = d3.select(el).append('div').attr('class', 'tip').style('opacity', 0);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', r => x(r.hold_year)).attr('width', x.bandwidth())
+      .attr('y', 0).attr('height', H - 20).attr('fill', 'transparent').style('cursor', 'pointer')
+      .on('mousemove', (ev, r) => {
+        tip.html(''); tip.append('div').attr('class', 't').text(r.hold_year + ' 年' + (r.partial ? '（截至 ' + r.as_of + '）' : ''));
+        B.forEach(([k, n, c]) => { const row = tip.append('div').attr('class', 'r'); row.append('i').style('background', c); row.append('span').text(n + '  ' + pct(r[k])); });
+        if (r.no_daily) tip.append('div').attr('class', 't').text('⚠ ' + r.no_daily + ' 没有日线，未判断卖出');
+        const [px, py] = d3.pointer(ev, el); tip.style('opacity', 1); tipAt(el, tip.node(), px, py);
+      })
+      .on('mouseleave', () => tip.style('opacity', 0))
+      .on('click', (ev, r) => { selected = r.hold_year; renderPicks3(); document.getElementById('t3-picks').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  }
+
+  function renderYearTable3(rows, cum, acts) {
+    const val = Object.fromEntries(cum.map(r => [r.hold_year, r.s3_value]));
+    const act = Object.fromEntries(acts.map(r => [Number(r.hold_year), r]));
+    const tb = document.querySelector('#t3-ytbl tbody'); tb.innerHTML = '';
+    [...rows].sort((p, q) => q.hold_year - p.hold_year).forEach(r => {
+      const tr = document.createElement('tr'); tr.dataset.key = String(r.hold_year);
+      const add = (t, c) => { const td = document.createElement('td'); td.textContent = t; if (c) td.className = c; tr.appendChild(td); return td; };
+      const cls = v => v >= 0 ? 'up' : 'down';
+      add(String(r.hold_year) + (r.partial ? '*' : '') + (r.no_daily ? ' ⚠' : ''), 'l' + (r.no_daily ? ' flag' : ''));
+      add(act[r.hold_year] ? act[r.hold_year].picks : '—', 'l join');
+      add(pct(r.s3_return), cls(r.s3_return)); add(pct(r.top3_plain_return), cls(r.top3_plain_return));
+      const e = act[r.hold_year] ? Number(act[r.hold_year].effect) : null; add(pct(e), e == null ? '' : cls(e));
+      add(pct(r.qqq_return), cls(r.qqq_return)); add(pct(r.s1_return), cls(r.s1_return)); add(pct(r.s2_return), cls(r.s2_return));
+      add(num(val[r.hold_year]), '');
+      tb.appendChild(tr);
+    });
+  }
+
+  function renderPicks3() {
+    const years = [...new Set(pickRows.map(p => +p.hold_year))].sort((a, b) => a - b);
+    if (!years.length) return;
+    if (selected == null || !years.includes(selected)) selected = years.includes(2025) ? 2025 : years[years.length - 1];
+    const btns = document.getElementById('t3-yearbtns'); btns.innerHTML = '';
+    years.forEach(y => {
+      const yr = yearRows.find(r => r.hold_year === y);
+      const bt = document.createElement('button'); bt.type = 'button'; bt.id = 't3-yb-' + y;
+      bt.textContent = y + (yr && yr.partial ? '*' : '') + (yr && yr.no_daily ? ' ⚠' : ''); bt.setAttribute('aria-pressed', String(y === selected));
+      bt.addEventListener('click', () => { selected = y; renderPicks3(); });
+      btns.appendChild(bt);
+    });
+    const yr = yearRows.find(r => r.hold_year === selected);
+    const sum = document.getElementById('t3-yearsum'); sum.innerHTML = '';
+    if (yr) {
+      [['策略三', pct(yr.s3_return)], ['前三不带规则', pct(yr.top3_plain_return)], ['QQQ', pct(yr.qqq_return)]].forEach(([k, v]) => {
+        const s = document.createElement('span'); s.append(k + ' '); const b = document.createElement('b'); b.textContent = v; s.appendChild(b); sum.appendChild(s);
+      });
+      if (yr.partial) { const s = document.createElement('span'); s.textContent = '截至 ' + yr.as_of; sum.appendChild(s); }
+    }
+    const rows = pickRows.filter(p => +p.hold_year === selected).sort((a, b) => a.rank - b.rank);
+    const tb = document.querySelector('#t3-ptbl tbody'); tb.innerHTML = '';
+    rows.forEach(r => {
+      const tr = document.createElement('tr'); tr.dataset.key = r.hold_year + ',' + r.ticker;
+      const add = (t, c) => { const td = document.createElement('td'); td.textContent = t; if (c) td.className = c; tr.appendChild(td); return td; };
+      const cls = v => v == null ? '' : (v >= 0 ? 'up' : 'down');
+      add(String(r.rank), 'l'); add(r.ticker, 'l tk'); add(r.company, 'l co');
+      add(pct(N(r.sel_return), 0), 'up');
+      const td = add('', 'act');
+      if (r.data === 'no_daily') { const s = document.createElement('span'); s.className = 'pill nod'; s.textContent = '⚠ 无日线，无法判断'; td.appendChild(s); }
+      else if (r.action === '未触发') { const s = document.createElement('span'); s.className = 'pill'; s.textContent = '未触发'; td.appendChild(s); }
+      else String(r.action).split('+').forEach(a => { const s = document.createElement('span'); s.className = 'pill ' + (a === '减半' ? 'half' : 'stop'); s.textContent = a; td.appendChild(s); });
+      add(r.half_date || '—', 'l'); add(pct(N(r.half_vs_buy)), cls(N(r.half_vs_buy))); add(pct(N(r.half_from_peak)), cls(N(r.half_from_peak)));
+      add(r.stop_date || '—', 'l'); add(pct(N(r.stop_vs_buy)), cls(N(r.stop_vs_buy)));
+      add(r.data === 'no_daily' ? '无法计算' : pct(N(r.rule_return)), r.data === 'no_daily' ? 'flag' : cls(N(r.rule_return)));
+      add(pct(N(r.plain_return)), cls(N(r.plain_return)));
+      add(r.note || '', 'l co');
+      tb.appendChild(tr);
+    });
+  }
+
+  let built = false;
+  window.moBuild3 = () => {
+    if (built) return;
+    document.getElementById('p-top3').appendChild(document.getElementById('tpl-top3').content.cloneNode(true));
+    built = true;
+  };
+
+  window.moDraw3 = () => {
+    if (!built || document.getElementById('p-top3').hidden) return;
+    const yd = dash.data('s3_yearly'), pd = dash.data('s3_picks'), cu = dash.data('s3_cumulative'), sm = dash.data('s3_summary'), ac = dash.data('s3_year_actions');
+    legend('t3-lg1', SER());
+    legend('t3-lg2', [[0, '策略三', dash.colors[2]], [0, '前三不带规则', dash.colors[3]], [0, 'QQQ', muted()]]);
+    const ann = document.getElementById('t3-annual-chart'), gr = document.getElementById('t3-growth-chart');
+    yearRows = yd.status === 'ok' ? yd.data.map(r => ({
+      ...r, hold_year: +r.hold_year, s3_return: +r.s3_return, top3_plain_return: +r.top3_plain_return, s1_return: +r.s1_return,
+      s2_return: +r.s2_return, qqq_return: +r.qqq_return, partial: isTrue(r.partial), no_daily: r.no_daily || ''
+    })) : [];
+    if (yd.status === 'ok') { unskel(ann); drawAnnual3(ann, yearRows); } else if (yd.status === 'error') failLine(ann);
+    if (cu.status === 'ok') {
+      const c = cu.data.map(r => ({ ...r, hold_year: +r.hold_year, partial: isTrue(r.partial) }));
+      unskel(gr); drawGrowth5(gr, c);
+      if (yd.status === 'ok' && ac.status === 'ok') renderYearTable3(yearRows, c, ac.data);
+    } else if (cu.status === 'error') failLine(gr);
+    if (pd.status === 'ok') {
+      pickRows = pd.data; renderPicks3();
+      const nd = pd.data.filter(p => p.data === 'no_daily');
+      const box = document.getElementById('t3-nodaily'), txt = document.getElementById('t3-nodaily-text');
+      box.hidden = !nd.length;
+      if (nd.length && sm.status === 'ok' && sm.data.length) {
+        const s = sm.data[0];
+        txt.textContent = '';
+        nd.forEach(p => {
+          txt.append(`${p.hold_year} 年的 `);
+          const t = document.createElement('b'); t.textContent = p.ticker; t.dataset.source = 's3_picks'; t.dataset.field = 'ticker'; t.dataset.where = 'hold_year=' + p.hold_year + '&ticker=' + p.ticker;
+          txt.append(t, `（${p.company}）：没有找到当年的日线，无法判断是否触发减半或止损。`);
+        });
+        const parts = [
+          '汇总里按它的全年涨跌计入（', ...nd.map(p => [pct(N(p.plain_return)), p]), '），这在效果上等于“没有触发”，所以 15 年倍数 ',
+          [mult(s.s3_growth), 's3_growth'], ' 要打折扣看。另一个情景是假设它开年就以 −8% 止损，策略三 15 年倍数会是 ',
+          [mult(s.s3_alt_growth), 's3_alt_growth'], '（年化 ', [pct(s.s3_alt_cagr), 's3_alt_cagr'], '）。真实结果取决于这只股票当年的日内走势，不一定落在两者之间。'
+        ];
+        parts.forEach(x => {
+          if (!Array.isArray(x)) { txt.append(x); return; }
+          const b = document.createElement('b'); b.textContent = x[0];
+          if (typeof x[1] === 'string') { b.dataset.source = 's3_summary'; b.dataset.field = x[1]; }
+          else { b.dataset.source = 's3_picks'; b.dataset.field = 'plain_return'; b.dataset.where = 'hold_year=' + x[1].hold_year + '&ticker=' + x[1].ticker; }
+          txt.appendChild(b);
+        });
+      }
+    }
+    if (sm.status === 'ok' && sm.data.length) {
+      const r = sm.data[0];
+      const set = (f, t) => document.querySelectorAll(`#p-top3 [data-source="s3_summary"][data-field="${f}"]`).forEach(el => { el.textContent = t; unskel(el); });
+      ['s3', 'plain', 's1', 's2', 'qqq'].forEach(k => { set(k + '_growth', mult(r[k + '_growth'])); set(k + '_cagr', pct(r[k + '_cagr'])); });
+      set('win_years', String(r.win_years)); document.getElementById('t3-win-of').textContent = ' / ' + r.years;
+      const tk = document.getElementById('t3-take'); unskel(tk); tk.textContent = '';
+      const parts = [
+        `${r.first_year}–${r.last_year} 年，策略三的 1 个单位滚动到 `, [mult(r.s3_growth), 's3_growth'], `（年化 `, [pct(r.s3_cagr), 's3_cagr'],
+        `），不带卖出规则的同样三只股票是 `, [mult(r.plain_growth), 'plain_growth'], `，QQQ 是 `, [mult(r.qqq_growth), 'qqq_growth'],
+        `。两条规则把最差的一年从 ${r.plain_worst_year} 年的 `, [pct(r.plain_worst), 'plain_worst'], ` 收窄到 ${r.s3_worst_year} 年的 `, [pct(r.s3_worst), 's3_worst'],
+        `，代价是 15 年里有 `, [String(r.rule_worse_years), 'rule_worse_years'], ` 年比一直持有赚得少：追涨买到的股票波动大，8% 止损经常在年初的正常回调里把仓位卖光，之后的反弹就错过了。`,
+        `这 15 年共 `, [String(r.positions), 'positions'], ` 笔持仓，其中 `, [String(r.n_stop), 'n_stop'], ` 笔触发止损，`, [String(r.n_half), 'n_half'], ` 笔触发减半（有的两条都触发），`, [String(r.n_none), 'n_none'], ` 笔两条都没触发，`,
+        [String(r.n_nodaily), 'n_nodaily'], ` 笔没有日线、无法判断。`
+      ];
+      parts.forEach(x => { if (Array.isArray(x)) { const b = document.createElement('b'); b.textContent = x[0]; b.dataset.source = 's3_summary'; b.dataset.field = x[1]; tk.appendChild(b); } else tk.append(x); });
+    }
+  };
+  dash.onData(window.moDraw3);
+})();
+</script>
+
+<script>
 (() => {
   const { pct, mult, num } = window.moFmt;
   const root = document.querySelector('.mo');
@@ -696,7 +1113,8 @@ dash.calc('top1_summary', {
   };
   dash.onData(window.moDraw2);
 
-  const tabs = { 'p-top10': document.getElementById('tab-top10'), 'p-top1': document.getElementById('tab-top1') };
+  const tabs = { 'p-top10': document.getElementById('tab-top10'), 'p-top1': document.getElementById('tab-top1'), 'p-top3': document.getElementById('tab-top3') };
+  const draws = { 'p-top10': () => window.moDraw1(), 'p-top1': () => window.moDraw2(), 'p-top3': () => window.moDraw3() };
   function show(id, link = true) {
     Object.entries(tabs).forEach(([pid, btn]) => {
       const on = pid === id;
@@ -704,17 +1122,20 @@ dash.calc('top1_summary', {
       btn.setAttribute('aria-selected', String(on)); btn.tabIndex = on ? 0 : -1;
     });
     if (id === 'p-top1') build();
+    if (id === 'p-top3') window.moBuild3();
     if (link) dash.setLink(id);
-    (id === 'p-top1' ? window.moDraw2 : window.moDraw1)();
+    draws[id]();
   }
   Object.entries(tabs).forEach(([pid, btn]) => btn.addEventListener('click', () => show(pid)));
   document.querySelector('.mo .tabs').addEventListener('keydown', ev => {
     if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
-    const next = tabs['p-top10'].getAttribute('aria-selected') === 'true' ? 'p-top1' : 'p-top10';
+    const ids = Object.keys(tabs);
+    const cur = ids.findIndex(pid => tabs[pid].getAttribute('aria-selected') === 'true');
+    const next = ids[(cur + (ev.key === 'ArrowRight' ? 1 : ids.length - 1)) % ids.length];
     show(next); tabs[next].focus();
   });
   const h = location.hash.slice(1);
-  if (h === 'p-top1') show('p-top1', false);
+  if (h === 'p-top1' || h === 'p-top3') show(h, false);
   else {
     const named = document.getElementById(h);
     if (named) setTimeout(() => { named.scrollIntoView(); dash.setLink(named.id); }, 300);
