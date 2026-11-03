@@ -72,3 +72,32 @@ if '--fear' in sys.argv:
                       '平均日收益': r.groupby(bins, observed=False).mean().map(lambda x: f'{x*100:+.3f}%'),
                       '日波动': r.groupby(bins, observed=False).std().map(lambda x: f'{x*100:.2f}%')})
     print('\n按前一天 VIX 分组的 QQQ 日收益：'); print(g.to_string())
+
+if '--pct' in sys.argv:
+    vf = pd.read_csv('vix.csv', index_col=0, parse_dates=True)['CLOSE']   # 1990 年起的全部 VIX，用来算滚动百分位
+    def pctile(win):
+        """当天 VIX 在过去 win 个交易日（含当天）里的百分位，0–100；只用过去的数据"""
+        p = vf.rolling(win).apply(lambda a: (a[:-1] < a[-1]).mean() * 100 + (a[:-1] == a[-1]).mean() * 50, raw=True)
+        return p.reindex(idx).ffill()
+    def band_p(p, hi_in, lo_out, lo=0.0, hi=1.0):
+        pos, cur = [], lo
+        for x in p:
+            if x > hi_in: cur = hi
+            elif x < lo_out: cur = lo
+            pos.append(cur)
+        return np.array(pos)
+    for win, wn in ((252, '1年'), (756, '3年')):
+        p = pctile(win)
+        print(f'\n=== 百分位窗口：过去{wn}（{win} 个交易日）')
+        rs = [run(np.ones(len(idx)), '一直持有 QQQ'), run(np.full(len(idx), 0.7), '固定 70%')]
+        for a, b in ((90, 50), (90, 70), (95, 50), (80, 50)):
+            rs.append(run(band_p(p.values, a, b), f'只在恐慌时：>{a}分位买入，<{b}分位卖出'))
+        for a, b in ((90, 50), (90, 70), (95, 50), (80, 50)):
+            rs.append(run(band_p(p.values, a, b, lo=0.7, hi=1.0), f'底仓70%：>{a}分位加满，<{b}分位回70%'))
+        print(pd.DataFrame(rs).to_string(index=False))
+        r = rq[idx > START]; pp = p.shift(1)[idx > START]
+        bins = pd.cut(pp, [-1, 20, 50, 80, 90, 95, 101], labels=['<20', '20-50', '50-80', '80-90', '90-95', '>95'])
+        g = pd.DataFrame({'天数占比': bins.value_counts(normalize=True).sort_index().map('{:.0%}'.format),
+                          '这些天的累计收益': np.log1p(r).groupby(bins, observed=False).sum().map(lambda x: f'{np.expm1(x)*100:+.0f}%'),
+                          '平均日收益': r.groupby(bins, observed=False).mean().map(lambda x: f'{x*100:+.3f}%')})
+        print(f'按前一天 VIX 百分位（过去{wn}）分组的 QQQ 日收益：'); print(g.to_string())
