@@ -18,9 +18,8 @@ sma200=q.rolling(200).mean(); in200=(q>sma200).shift(1).fillna(False)
 r200=np.where(in200,rq,rc); r200=pd.Series(r200,idx)
 # 10-month SMA on month-end closes, held the whole next month
 me=q.resample('ME').last(); sig=(me>me.rolling(10).mean())
-pos=sig.reindex(idx,method='ffill').shift(1).fillna(False)
-# use month index: position for a day = signal of previous month-end
-pm=sig.shift(1).reindex(idx,method='ffill').fillna(False)
+# 月末信号从下一个交易日起生效（旧写法 sig.shift(1).reindex(...) 会多滞后一个月，已修正）
+pm=sig.reindex(idx,method='ffill').shift(1).fillna(False)
 r10=pd.Series(np.where(pm,rq,rc),idx)
 # 60/40 QQQ/IEF rebalanced every January
 def mix(w):
