@@ -48,3 +48,27 @@ if '--sens' in sys.argv:
     print('\nVIX>30 空仓/<20 买回 在 2021-2023 的操作：')
     for d in ch[(ch != 0) & (idx > '2021-01-01') & (idx < '2023-12-31')].index:
         print(' ', d.date(), '卖出' if ch[d] < 0 else '买回', 'VIX %.1f' % v[d], 'QQQ 距前高 %+.0f%%' % ((q[d] / q[:d].max() - 1) * 100))
+
+if '--fear' in sys.argv:
+    print('\n--- 只在恐慌时持有：平时空仓，VIX>入 时全仓买入，VIX<出 时全部卖出')
+    rs = [run(np.ones(len(idx)), '一直持有 QQQ')]
+    for a, b in ((25, 20), (25, 25), (30, 20), (30, 25), (30, 30), (35, 20), (40, 25)):
+        rs.append(run(band(a, b, lo=1.0, hi=0.0), f'>{a} 买入，<{b} 卖出'))
+    def hold_n(a, n):
+        """VIX>a 时买入，持有 n 个交易日后卖出（期间再次触发则顺延）"""
+        pos, left = [], 0
+        for x in v:
+            if x > a: left = n
+            pos.append(1.0 if left > 0 else 0.0); left = max(0, left - 1)
+        return np.array(pos)
+    for a, n in ((30, 126), (30, 252), (40, 252)):
+        rs.append(run(hold_n(a, n), f'>{a} 买入，持有 {n // 21} 个月'))
+    print(pd.DataFrame(rs).to_string(index=False))
+    # 全程收益来自哪里：按买入当天 VIX 高低分组，统计 QQQ 次日收益的贡献
+    r = rq[idx > START]; vv = v.shift(1)[idx > START]
+    bins = pd.cut(vv, [0, 15, 20, 25, 30, 40, 100], labels=['<15', '15-20', '20-25', '25-30', '30-40', '>40'])
+    g = pd.DataFrame({'天数占比': bins.value_counts(normalize=True).sort_index().map('{:.0%}'.format),
+                      '这些天的累计收益': (np.log1p(r)).groupby(bins, observed=False).sum().map(lambda x: f'{np.expm1(x)*100:+.0f}%'),
+                      '平均日收益': r.groupby(bins, observed=False).mean().map(lambda x: f'{x*100:+.3f}%'),
+                      '日波动': r.groupby(bins, observed=False).std().map(lambda x: f'{x*100:.2f}%')})
+    print('\n按前一天 VIX 分组的 QQQ 日收益：'); print(g.to_string())
