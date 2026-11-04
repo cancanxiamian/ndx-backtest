@@ -62,6 +62,23 @@
 .mo .pill.stop { color: var(--color-bad); border-color: currentColor; }
 .mo .pill.nod { color: var(--color-warn); border-color: currentColor; font-weight: 600; }
 .mo .pill + .pill { margin-left: 4px; }
+.mo .pk-ctl { display: grid; gap: var(--cds-gap-md); }
+.mo .pk-row { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; }
+.mo .pk-row label { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.mo .pk-ctl input { font: inherit; font-size: var(--cds-font-size-body); padding: 5px 8px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); min-width: 0; }
+.mo .pk-ctl input[type=text] { width: min(100%, 16rem); }
+.mo .pk-ctl button.pk-btn { font: inherit; font-size: var(--cds-font-size-caption); padding: 5px 10px; border-radius: var(--cds-radius); border: 1px solid var(--color-border-line); background: transparent; color: var(--color-fg); cursor: pointer; }
+.mo .pk-ctl button.pk-btn:focus-visible, .mo .chip button:focus-visible { outline: 2px solid var(--mo-accent); outline-offset: 2px; }
+.mo .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mo .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 10px; border: 1px solid var(--color-border-line); border-radius: 999px; font-size: var(--cds-font-size-caption); }
+.mo .chip i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.mo .chip button { border: 0; background: transparent; color: var(--color-fg-muted); cursor: pointer; font: inherit; padding: 0 6px; border-radius: 999px; }
+.mo .pk-msg { color: var(--color-warn); font-size: var(--cds-font-size-caption); min-height: 1em; }
+.mo .seg { display: inline-flex; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+.mo .seg button { font: inherit; font-size: var(--cds-font-size-caption); padding: 4px 10px; border: 0; background: transparent; color: var(--color-fg-muted); cursor: pointer; }
+.mo .seg button[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); }
+.mo td .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 6px; vertical-align: -1px; }
+.mo td.best { font-weight: 600; }
 </style>
 
 <div class="mo">
@@ -69,6 +86,7 @@
     <button type="button" role="tab" id="tab-top10" aria-controls="p-top10" aria-selected="true">策略一：前十等权</button>
     <button type="button" role="tab" id="tab-top1" aria-controls="p-top1" aria-selected="false">策略二：全仓第一名</button>
     <button type="button" role="tab" id="tab-top3" aria-controls="p-top3" aria-selected="false">策略三：前三 + 卖出规则</button>
+    <button type="button" role="tab" id="tab-pk" aria-controls="p-pk" aria-selected="false">股票 PK</button>
   </nav>
   <div class="page" id="p-top10" role="tabpanel" aria-labelledby="tab-top10">
   <header class="head" id="top">
@@ -304,6 +322,77 @@
         <li>对照组“前三等权，不带卖出规则”是同样三只股票一直持有到年底。策略一、策略二和 QQQ 的数字与前两个标签页相同。2026 年截至最新交易日，不计入 15 年汇总。</li>
         <li>前三名这个数字本身就有运气成分：前二、前四的结果和前三差很多。20% 和 8% 两个参数只测了这一组，没有调参。</li>
         <li>这是历史数据的回测，不代表未来收益，也不构成投资建议。</li>
+      </ol>
+    </section>
+  </template>
+  <div class="page" id="p-pk" role="tabpanel" aria-labelledby="tab-pk" hidden></div>
+  <template id="tpl-pk">
+    <header class="head">
+      <h1>股票 PK</h1>
+      <p class="lede">挑几只股票放在一起，看同一段时间里谁涨得多、谁跌得狠。价格是含分红的复权收盘价，所有数字都从区间第一个交易日的收盘价算起。</p>
+      <p class="take dash-skeleton" id="pk-take">—</p>
+    </header>
+    <section class="card pk-ctl" id="pk-controls">
+      <div class="pk-row">
+        <label for="pk-add">添加股票</label>
+        <input type="text" id="pk-add" list="pk-dl" placeholder="输入代码或公司名，如 NVDA" autocomplete="off" aria-label="添加股票">
+        <datalist id="pk-dl" data-source="pk_prices"></datalist>
+        <button type="button" class="pk-btn" id="pk-add-btn">添加</button>
+        <span class="pk-msg" id="pk-msg" role="status"></span>
+      </div>
+      <div class="chips" id="pk-chips" aria-label="已选股票"></div>
+      <div class="pk-row">
+        <label for="pk-start">从</label><input type="date" id="pk-start" aria-label="开始日期">
+        <label for="pk-end">到</label><input type="date" id="pk-end" aria-label="结束日期">
+        <span class="seg" id="pk-quick" role="group" aria-label="快捷区间">
+          <button type="button" data-q="ytd">今年</button><button type="button" data-q="1">1 年</button><button type="button" data-q="3">3 年</button>
+          <button type="button" data-q="5">5 年</button><button type="button" data-q="10">10 年</button><button type="button" data-q="all">全部</button>
+        </span>
+        <button type="button" class="pk-btn" id="pk-reset">恢复默认</button>
+      </div>
+    </section>
+    <section class="card" id="pk-stats">
+      <h2>区间成绩单</h2>
+      <p class="note" id="pk-range-note">—</p>
+      <div class="tablewrap" data-source="pk_prices pk_calendar">
+        <table id="pk-stbl">
+          <thead><tr>
+            <th class="l">股票</th><th>区间涨幅</th><th>年化收益</th><th>年化波动</th><th>最大回撤</th><th class="l">回撤区间</th><th>距区间高点</th><th class="l">说明</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note">年化收益只在区间超过一年时计算。年化波动是日收益标准差乘以 √252。最大回撤是区间内从任一高点到之后最低点的最大跌幅。</p>
+    </section>
+    <section class="grid">
+      <div class="card" id="pk-growth">
+        <div class="pk-row" style="justify-content: space-between;"><h2>累计涨幅</h2>
+          <span class="seg" id="pk-scale" role="group" aria-label="纵轴刻度"><button type="button" data-s="lin" aria-pressed="true">普通</button><button type="button" data-s="log" aria-pressed="false">对数</button></span></div>
+        <p class="note">从区间第一天算起。区间开始时还没上市的股票，从它有数据的第一天算起。涨幅差距很大时，用对数刻度更容易比较，同样的高度代表同样的倍数。</p>
+        <div class="legend" id="pk-lg1"></div>
+        <div class="chart dash-skeleton" id="pk-growth-chart" data-source="pk_prices pk_calendar"></div>
+      </div>
+      <div class="card" id="pk-dd">
+        <h2>回撤</h2>
+        <p class="note">每一天距离区间内此前最高收盘价跌了多少。曲线越深、贴在底部越久，持有体验越差。</p>
+        <div class="legend" id="pk-lg2"></div>
+        <div class="chart dash-skeleton" id="pk-dd-chart" data-source="pk_prices pk_calendar"></div>
+      </div>
+    </section>
+    <section class="card" id="pk-years">
+      <h2>逐年涨幅</h2>
+      <p class="note">每个日历年的涨跌，只算落在所选区间里的部分；首尾不满一年的年份标 *，标 ¹ 的是当年才开始有数据、从第一个交易日算起。每一行里涨得最多的加粗。</p>
+      <div class="tablewrap" data-source="pk_prices pk_calendar">
+        <table id="pk-ytbl"><thead></thead><tbody></tbody></table>
+      </div>
+    </section>
+    <section class="card" id="pk-method">
+      <h2>数据说明</h2>
+      <ol class="method">
+        <li>可选范围：2010 年以来进出过纳斯达克100、而且 Yahoo 财经还有日线的公司，加上 QQQ，共 <span id="pk-count" data-source="pk_prices">—</span> 只。已经退市、被收购的公司（如动视暴雪、Celgene）Yahoo 已删除日线，选不到；代码被别的公司重新使用过的（如 FB、PCLN、EA）也排除了。</li>
+        <li>价格：Yahoo 财经的日线复权收盘价，分红和拆股都已经算进去，所以只能比涨跌幅，不能当作当时的股价。数据截至 <span id="pk-last" data-source="pk_calendar">—</span>，这一版不会自动更新。</li>
+        <li>同一家公司的不同类别股票（如 GOOGL 和 GOOG）分别列出。</li>
+        <li>这是历史数据，不代表未来收益，也不构成投资建议。</li>
       </ol>
     </section>
   </template>
@@ -946,6 +1035,277 @@ dash.calc('s3_year_actions', {
 
 <script>
 (() => {
+  const { pct, num } = window.moFmt;
+  const root = document.querySelector('.mo');
+  const muted = () => getComputedStyle(root).getPropertyValue('--cds-chart-muted').trim() || '#999';
+  const unskel = (el) => el && el.classList.remove('dash-skeleton');
+  const failLine = (el, t) => { el.innerHTML = ''; const d = document.createElement('div'); d.className = 'fail'; d.textContent = t || 'Failed to load'; el.appendChild(d); };
+  const tipAt = (box, tip, x, y) => {
+    const bw = box.clientWidth, tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = x + 12; if (left + tw > bw) left = x - tw - 12; if (left < 0) left = 0;
+    let top = y - th - 8; if (top < 0) top = y + 12;
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+  };
+  const DEF = { pk_tickers: ['QQQ', 'NVDA', 'AAPL', 'MSFT', 'AMZN'], pk_start: null, pk_end: null };
+  const MAX = 8;
+  let built = false, logScale = false;
+  let meta = null, cal = null, calIdx = null;          // ticker -> row; dates; date -> index
+  const cache = new Map();                            // ticker -> {off, L: Float64Array (NaN = no data)}
+
+  const P = () => { const p = dash.params() || {}; return { tickers: Array.isArray(p.pk_tickers) ? p.pk_tickers : DEF.pk_tickers, start: p.pk_start || null, end: p.pk_end || null }; };
+  const setP = (o) => dash.setParams(o);
+
+  function series(t) {
+    if (cache.has(t)) return cache.get(t);
+    const r = meta.get(t); if (!r) return null;
+    const off = calIdx.get(r.first); if (off == null) return null;
+    const parts = String(r.c).split(','); const L = new Float64Array(parts.length); let acc = 0;
+    for (let i = 0; i < parts.length; i++) { if (parts[i] === '') { L[i] = NaN; continue; } acc += Number(parts[i]); L[i] = acc / 1e4; }
+    const s = { off, L }; cache.set(t, s); return s;
+  }
+  const lastDate = () => cal[cal.length - 1];
+  const firstIdxOnOrAfter = (d) => { let lo = 0, hi = cal.length - 1, a = cal.length; while (lo <= hi) { const m = (lo + hi) >> 1; if (cal[m] >= d) { a = m; hi = m - 1; } else lo = m + 1; } return a; };
+  const lastIdxOnOrBefore = (d) => { let lo = 0, hi = cal.length - 1, a = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (cal[m] <= d) { a = m; lo = m + 1; } else hi = m - 1; } return a; };
+  const shiftYears = (d, y) => { const [Y, M, D] = d.split('-').map(Number); const dt = new Date(Date.UTC(Y - y, M - 1, D)); return dt.toISOString().slice(0, 10); };
+  function range() {
+    const p = P(); const end = p.end && p.end <= lastDate() ? p.end : lastDate();
+    let start = p.start || shiftYears(end, 5); if (start < cal[0]) start = cal[0]; if (start > end) start = end;
+    return { start, end, i0: firstIdxOnOrAfter(start), i1: lastIdxOnOrBefore(end) };
+  }
+  const colorOf = (tickers) => { let k = 0; return Object.fromEntries(tickers.map(t => [t, t === 'QQQ' ? muted() : dash.colors[(k++) % dash.colors.length]])); };
+
+  function stats(t, i0, i1) {
+    const s = series(t); if (!s) return null;
+    const pts = [];
+    for (let i = Math.max(i0, s.off); i <= Math.min(i1, s.off + s.L.length - 1); i++) { const v = s.L[i - s.off]; if (!isNaN(v)) pts.push([i, v]); }
+    if (pts.length < 2) return { t, pts, empty: true };
+    const b = pts[0][1];
+    let peak = -Infinity, peakI = pts[0][0], mdd = 0, mddPeak = null, mddLow = null, hi = -Infinity;
+    const rets = [];
+    pts.forEach(([i, v], k) => {
+      if (k) rets.push(v - pts[k - 1][1]);
+      if (v > peak) { peak = v; peakI = i; }
+      const dd = Math.exp(v - peak) - 1; if (dd < mdd) { mdd = dd; mddPeak = peakI; mddLow = i; }
+      hi = Math.max(hi, v);
+    });
+    const e = pts[pts.length - 1][1];
+    const total = Math.exp(e - b) - 1;
+    const d0 = cal[pts[0][0]], d1 = cal[pts[pts.length - 1][0]];
+    const yrs = (Date.parse(d1) - Date.parse(d0)) / 864e5 / 365.25;
+    const mean = rets.reduce((a, x) => a + x, 0) / rets.length;
+    const vol = Math.sqrt(rets.reduce((a, x) => a + (x - mean) ** 2, 0) / Math.max(1, rets.length - 1)) * Math.sqrt(252);
+    return { t, pts, total, cagr: yrs >= 1 ? Math.exp((e - b) / yrs) - 1 : null, vol, mdd, mddPeak, mddLow, fromHigh: Math.exp(e - hi) - 1, d0, d1, b };
+  }
+
+  function drawLines(el, S, colors, i0, i1, mode) {
+    el.innerHTML = '';
+    const W = el.clientWidth || 600, H = 320;
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const val = (st, v, i) => mode === 'dd' ? null : (mode === 'log' ? Math.exp(v - st.b) : Math.exp(v - st.b) - 1);
+    const lines = S.map(st => {
+      if (mode === 'dd') { let pk = -Infinity; return st.pts.map(([i, v]) => { pk = Math.max(pk, v); return [i, Math.exp(v - pk) - 1]; }); }
+      return st.pts.map(([i, v]) => [i, val(st, v, i)]);
+    });
+    const all = lines.flat().map(p => p[1]);
+    let y;
+    if (mode === 'log') y = d3.scaleLog([Math.min(0.9, d3.min(all) * 0.95), Math.max(1.1, d3.max(all) * 1.05)], [H - 26, 12]);
+    else y = d3.scaleLinear([Math.min(0, d3.min(all)), Math.max(0, d3.max(all))], [H - 26, 12]).nice();
+    const fmtY = mode === 'log' ? (d => (d >= 1 ? d3.format('~g')(d) : d3.format('.1~f')(d)) + '×') : (d => pct(d, 0));
+    let ticks = mode === 'log' ? [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000].filter(t => t >= y.domain()[0] && t <= y.domain()[1]) : y.ticks(6);
+    if (mode === 'log' && ticks.length < 3) ticks = y.ticks(4);
+    const probe = svg.append('text').attr('font-size', 12);
+    let lw = 0; ticks.forEach(t => { probe.text(fmtY(t)); lw = Math.max(lw, probe.node().getComputedTextLength()); }); probe.remove();
+    const m = { l: lw + 10, r: 8 };
+    const x = d3.scaleLinear([i0, i1], [m.l, W - m.r]);
+    svg.append('g').selectAll('line').data(ticks).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', d => y(d)).attr('y2', d => y(d))
+      .attr('stroke', d => (mode === 'log' ? d === 1 : d === 0) ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end')
+      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(fmtY);
+    // x ticks: years or months
+    const span = Date.parse(cal[i1]) - Date.parse(cal[i0]);
+    const nT = Math.max(2, Math.floor((W - m.l - m.r) / 80));
+    const tix = d3.range(nT).map(k => Math.round(i0 + (i1 - i0) * k / (nT - 1)));
+    svg.append('g').selectAll('text').data(tix).join('text').attr('x', d => x(d)).attr('y', H - 8)
+      .attr('text-anchor', (d, k) => k === 0 ? 'start' : (k === tix.length - 1 ? 'end' : 'middle')).attr('font-size', 12).attr('fill', 'var(--color-fg-muted)')
+      .text(d => span > 3 * 365 * 864e5 ? cal[d].slice(0, 4) : cal[d].slice(0, 7));
+    const thin = (arr) => { const step = Math.max(1, Math.floor(arr.length / (W * 1.5))); return arr.filter((p, k) => k % step === 0 || k === arr.length - 1); };
+    S.forEach((st, k) => {
+      const ln = d3.line().x(p => x(p[0])).y(p => y(p[1]));
+      svg.append('path').datum(thin(lines[k])).attr('d', ln).attr('fill', 'none').attr('stroke', colors[st.t]).attr('stroke-width', st.t === 'QQQ' ? 1.75 : 2)
+        .attr('stroke-dasharray', st.t === 'QQQ' ? '5 3' : null).attr('stroke-linejoin', 'round');
+    });
+    const tip = d3.select(el).append('div').attr('class', 'tip').style('opacity', 0);
+    const guide = svg.append('line').attr('y1', 8).attr('y2', H - 24).attr('stroke', 'var(--cds-chart-axis)').style('opacity', 0);
+    const look = lines.map(l => new Map(l));
+    svg.append('rect').attr('x', m.l).attr('width', W - m.l - m.r).attr('y', 0).attr('height', H - 20).attr('fill', 'transparent')
+      .on('mousemove', ev => {
+        const [px, py] = d3.pointer(ev, el); const i = Math.max(i0, Math.min(i1, Math.round(x.invert(px))));
+        guide.attr('x1', x(i)).attr('x2', x(i)).style('opacity', 1);
+        const rows = S.map((st, k) => { let j = i; while (j >= i0 && !look[k].has(j)) j--; return [st.t, look[k].get(j), colors[st.t]]; })
+          .filter(r => r[1] != null).sort((a, b) => b[1] - a[1]);
+        tip.html(''); tip.append('div').attr('class', 't').text(cal[i]);
+        rows.forEach(([t, v, c]) => { const r = tip.append('div').attr('class', 'r'); r.append('i').style('background', c);
+          r.append('span').text(t + '  ' + (mode === 'log' ? num(v) + '×' : pct(v))); });
+        tip.style('opacity', 1); tipAt(el, tip.node(), px, py);
+      })
+      .on('mouseleave', () => { tip.style('opacity', 0); guide.style('opacity', 0); });
+  }
+
+  function legend(id, tickers, colors) {
+    const el = document.getElementById(id); el.innerHTML = '';
+    tickers.forEach(t => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = colors[t]; s.append(i, t); el.appendChild(s); });
+  }
+
+  function renderChips(tickers, colors) {
+    const el = document.getElementById('pk-chips'); el.innerHTML = '';
+    tickers.forEach(t => {
+      const c = document.createElement('span'); c.className = 'chip'; const i = document.createElement('i'); i.style.background = colors[t];
+      const r = meta.get(t); c.append(i, t + (r ? ' · ' + r.name : ''));
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.setAttribute('aria-label', '移除 ' + t);
+      b.addEventListener('click', () => setP({ pk_tickers: P().tickers.filter(x => x !== t) }));
+      c.appendChild(b); el.appendChild(c);
+    });
+  }
+
+  function addFromInput() {
+    const inp = document.getElementById('pk-add'), msg = document.getElementById('pk-msg');
+    const raw = inp.value.trim(); if (!raw) return;
+    let t = raw.split(/\s|—/)[0].toUpperCase().replace('.', '-');
+    if (!meta.has(t)) { const hit = [...meta.values()].find(r => r.name.toLowerCase().includes(raw.toLowerCase())); if (hit) t = hit.ticker; }
+    const cur = P().tickers;
+    if (!meta.has(t)) { msg.textContent = '没有找到“' + raw + '”。只能选 2010 年以来进过纳斯达克100、还有日线数据的公司。'; return; }
+    if (cur.includes(t)) { msg.textContent = t + ' 已经在列表里了。'; inp.value = ''; return; }
+    if (cur.length >= MAX) { msg.textContent = '最多同时比较 ' + MAX + ' 只，先移除一只。'; return; }
+    msg.textContent = ''; inp.value = ''; setP({ pk_tickers: [...cur, t] });
+  }
+
+  function renderStats(S, colors, rg) {
+    const tb = document.querySelector('#pk-stbl tbody'); tb.innerHTML = '';
+    const ok = S.filter(s => !s.empty).sort((a, b) => b.total - a.total);
+    const best = ok.length ? ok[0].t : null;
+    [...ok, ...S.filter(s => s.empty)].forEach(st => {
+      const tr = document.createElement('tr');
+      const add = (t, c) => { const td = document.createElement('td'); td.textContent = t; if (c) td.className = c; tr.appendChild(td); return td; };
+      const td = add('', 'l'); const sw = document.createElement('span'); sw.className = 'sw'; sw.style.background = colors[st.t];
+      const b = document.createElement('b'); b.textContent = st.t; td.append(sw, b, ' ' + (meta.get(st.t)?.name || ''));
+      if (st.empty) { add('—'); add('—'); add('—'); add('—'); add('—', 'l'); add('—'); add('所选区间里没有数据', 'l join'); tb.appendChild(tr); return; }
+      const cls = v => v == null ? '' : (v >= 0 ? 'up' : 'down');
+      add(pct(st.total), cls(st.total) + (st.t === best && ok.length > 1 ? ' best' : ''));
+      add(st.cagr == null ? '—' : pct(st.cagr), cls(st.cagr)); add(pct(st.vol).replace('+', ''), '');
+      add(pct(st.mdd), 'down'); add(st.mddPeak == null ? '—' : cal[st.mddPeak] + ' → ' + cal[st.mddLow], 'l join'); add(pct(st.fromHigh), cls(st.fromHigh));
+      const notes = [];
+      if (st.d0 > cal[rg.i0]) notes.push(st.d0 + ' 起才有数据');
+      if (st.d1 < cal[rg.i1]) notes.push('数据只到 ' + st.d1);
+      add(notes.join('；'), 'l join'); tb.appendChild(tr);
+    });
+    return ok;
+  }
+
+  function renderYears(S, rg) {
+    const ok = S.filter(s => !s.empty);
+    const th = document.querySelector('#pk-ytbl thead'), tb = document.querySelector('#pk-ytbl tbody'); th.innerHTML = ''; tb.innerHTML = '';
+    if (!ok.length) return;
+    const hr = document.createElement('tr'); [['年份', 'l'], ...ok.map(s => [s.t, ''])].forEach(([t, c]) => { const h = document.createElement('th'); h.textContent = t; if (c) h.className = c; hr.appendChild(h); }); th.appendChild(hr);
+    const y0 = +cal[rg.i0].slice(0, 4), y1 = +cal[rg.i1].slice(0, 4);
+    for (let y = y1; y >= y0; y--) {
+      const tr = document.createElement('tr');
+      const partial = (y === y0 && cal[rg.i0].slice(5) > '01-05') || (y === y1 && cal[rg.i1].slice(5) < '12-24');
+      const vals = ok.map(st => {
+        // 起点：上一年最后一个有数据的收盘价；没有（区间或上市从这一年开始）就用这一年第一个收盘价
+        let begin = null, first = null, fin = null;
+        for (const [i, L] of st.pts) {
+          const d = cal[i];
+          if (d < y + '-01-01') begin = L;
+          else if (d <= y + '-12-31') { if (first == null) first = L; fin = L; }
+          else break;
+        }
+        if (fin == null) return null;
+        const late = begin == null && y !== y0;
+        return { v: Math.exp(fin - (begin ?? first)) - 1, late };
+      });
+      const mx = d3.max(vals.filter(Boolean), d => d.v);
+      const td0 = document.createElement('td'); td0.className = 'l'; td0.textContent = y + (partial ? '*' : ''); tr.appendChild(td0);
+      vals.forEach(o => { const td = document.createElement('td'); if (!o) td.textContent = '—'; else { td.textContent = pct(o.v) + (o.late ? '¹' : ''); td.className = (o.v >= 0 ? 'up' : 'down') + (o.v === mx && ok.length > 1 ? ' best' : ''); } tr.appendChild(td); });
+      tb.appendChild(tr);
+    }
+  }
+
+  window.moBuildPK = () => {
+    if (built) return;
+    document.getElementById('p-pk').appendChild(document.getElementById('tpl-pk').content.cloneNode(true));
+    built = true;
+    document.getElementById('pk-add').addEventListener('keydown', e => { if (e.key === 'Enter') addFromInput(); });
+    document.getElementById('pk-add').addEventListener('change', e => { if (meta && meta.has(e.target.value.trim().split(/\s/)[0].toUpperCase())) addFromInput(); });
+    document.getElementById('pk-add-btn').addEventListener('click', addFromInput);
+    const st = document.getElementById('pk-start'), en = document.getElementById('pk-end');
+    st.addEventListener('change', () => { if (st.value && st.validity.valid && st.value >= st.min && st.value <= st.max) setP({ pk_start: st.value }); });
+    en.addEventListener('change', () => { if (en.value && en.validity.valid && en.value >= en.min && en.value <= en.max) setP({ pk_end: en.value }); });
+    [st, en].forEach(x => x.addEventListener('blur', () => window.moDrawPK()));
+    document.getElementById('pk-quick').addEventListener('click', e => {
+      const q = e.target.closest('button')?.dataset.q; if (!q || !cal) return;
+      const end = lastDate();
+      const start = q === 'all' ? cal[0] : (q === 'ytd' ? (+end.slice(0, 4) - 1) + '-12-31' : shiftYears(end, +q));
+      setP({ pk_start: start, pk_end: null });
+    });
+    document.getElementById('pk-reset').addEventListener('click', () => setP({ ...DEF }));
+    document.getElementById('pk-scale').addEventListener('click', e => { const s = e.target.closest('button')?.dataset.s; if (!s) return; logScale = s === 'log'; window.moDrawPK(); });
+  };
+
+  window.moDrawPK = () => {
+    if (!built || document.getElementById('p-pk').hidden) return;
+    const pr = dash.data('pk_prices'), ca = dash.data('pk_calendar');
+    const g = document.getElementById('pk-growth-chart'), dd = document.getElementById('pk-dd-chart');
+    if (pr.status === 'error' || ca.status === 'error') { failLine(g); failLine(dd); return; }
+    if (pr.status !== 'ok' || ca.status !== 'ok') return;
+    if (!meta) {
+      meta = new Map(pr.data.map(r => [r.ticker, r])); cal = ca.data.map(r => r.d); calIdx = new Map(cal.map((d, i) => [d, i]));
+      const dl = document.getElementById('pk-dl'); dl.innerHTML = '';
+      pr.data.forEach(r => { const o = document.createElement('option'); o.value = r.ticker + ' — ' + r.name; dl.appendChild(o); });
+    }
+    const cnt = document.getElementById('pk-count'); cnt.textContent = String(pr.data.length);
+    const lst = document.getElementById('pk-last'); lst.textContent = lastDate();
+    const p = P(); const tickers = p.tickers.filter(t => meta.has(t)).slice(0, MAX);
+    const rg = range();
+    const st = document.getElementById('pk-start'), en = document.getElementById('pk-end');
+    [st, en].forEach(x => { x.min = cal[0]; x.max = lastDate(); });
+    if (st !== document.activeElement) st.value = rg.start;
+    if (en !== document.activeElement) en.value = rg.end;
+    document.querySelectorAll('#pk-scale button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.s === 'log') === logScale)));
+    const colors = colorOf(tickers);
+    renderChips(tickers, colors); legend('pk-lg1', tickers, colors); legend('pk-lg2', tickers, colors);
+    const note = document.getElementById('pk-range-note');
+    const tk = document.getElementById('pk-take'); unskel(tk);
+    if (!tickers.length || rg.i1 <= rg.i0) {
+      note.textContent = tickers.length ? '所选区间太短，至少要两个交易日。' : '先添加一只股票。';
+      tk.textContent = '—'; failLine(g, '没有可画的数据'); failLine(dd, '没有可画的数据');
+      document.querySelector('#pk-stbl tbody').innerHTML = ''; renderYears([], rg); return;
+    }
+    const S = tickers.map(t => stats(t, rg.i0, rg.i1));
+    note.textContent = '区间：' + cal[rg.i0] + ' 收盘 → ' + cal[rg.i1] + ' 收盘，共 ' + (rg.i1 - rg.i0) + ' 个交易日。按区间涨幅从高到低排列，第一名加粗。';
+    const ok = renderStats(S, colors, rg);
+    renderYears(S, rg);
+    const drawable = S.filter(s => !s.empty);
+    unskel(g); unskel(dd);
+    if (drawable.length) { drawLines(g, drawable, colors, rg.i0, rg.i1, logScale ? 'log' : 'lin'); drawLines(dd, drawable, colors, rg.i0, rg.i1, 'dd'); }
+    else { failLine(g, '所选区间里没有数据'); failLine(dd, '所选区间里没有数据'); }
+    tk.textContent = '';
+    if (ok.length) {
+      const w = ok[0], l = ok[ok.length - 1];
+      const safest = [...ok].sort((a, b) => b.mdd - a.mdd)[0];
+      tk.append(cal[rg.i0] + ' 到 ' + cal[rg.i1] + '，');
+      const B = (t) => { const b = document.createElement('b'); b.textContent = t; return b; };
+      if (ok.length > 1) {
+        tk.append('涨得最多的是 ', B(w.t + ' ' + pct(w.total)), '，最少的是 ', B(l.t + ' ' + pct(l.total)), '。回撤最浅的是 ', B(safest.t + ' ' + pct(safest.mdd)), '。');
+      } else tk.append(w.t + ' 涨了 ', B(pct(w.total)), '，期间最大回撤 ', B(pct(w.mdd)), '。');
+      if (ok.some(s => s.d0 > cal[rg.i0])) tk.append('有的股票区间开始时还没上市，起点不同，比较时要注意。');
+    }
+  };
+  dash.onData(window.moDrawPK);
+})();
+</script>
+
+<script>
+(() => {
   const { pct, mult, num } = window.moFmt;
   const root = document.querySelector('.mo');
   const muted = () => getComputedStyle(root).getPropertyValue('--cds-chart-muted').trim() || '#999';
@@ -1113,8 +1473,8 @@ dash.calc('s3_year_actions', {
   };
   dash.onData(window.moDraw2);
 
-  const tabs = { 'p-top10': document.getElementById('tab-top10'), 'p-top1': document.getElementById('tab-top1'), 'p-top3': document.getElementById('tab-top3') };
-  const draws = { 'p-top10': () => window.moDraw1(), 'p-top1': () => window.moDraw2(), 'p-top3': () => window.moDraw3() };
+  const tabs = { 'p-top10': document.getElementById('tab-top10'), 'p-top1': document.getElementById('tab-top1'), 'p-top3': document.getElementById('tab-top3'), 'p-pk': document.getElementById('tab-pk') };
+  const draws = { 'p-top10': () => window.moDraw1(), 'p-top1': () => window.moDraw2(), 'p-top3': () => window.moDraw3(), 'p-pk': () => window.moDrawPK() };
   function show(id, link = true) {
     Object.entries(tabs).forEach(([pid, btn]) => {
       const on = pid === id;
@@ -1123,6 +1483,7 @@ dash.calc('s3_year_actions', {
     });
     if (id === 'p-top1') build();
     if (id === 'p-top3') window.moBuild3();
+    if (id === 'p-pk') window.moBuildPK();
     if (link) dash.setLink(id);
     draws[id]();
   }
@@ -1135,7 +1496,7 @@ dash.calc('s3_year_actions', {
     show(next); tabs[next].focus();
   });
   const h = location.hash.slice(1);
-  if (h === 'p-top1' || h === 'p-top3') show(h, false);
+  if (h === 'p-top1' || h === 'p-top3' || h === 'p-pk') show(h, false);
   else {
     const named = document.getElementById(h);
     if (named) setTimeout(() => { named.scrollIntoView(); dash.setLink(named.id); }, 300);

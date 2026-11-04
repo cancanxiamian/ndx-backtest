@@ -19,6 +19,7 @@
 - 标签页一 `p-top10`：策略一，上一年涨幅前十，等权。原样保留，用户明确要求不要删。
 - 标签页二 `p-top1`：策略二，全仓上一年第一名。内容在 `<template id="tpl-top1">`，第一次打开时才克隆。
 - 标签页三 `p-top3`：策略三，前三等权 + 回撤减半 + 8% 止损。内容在 `<template id="tpl-top3">`，数据集 `datasets/s3_yearly`、`datasets/s3_picks`（`s3.py` 生成）。
+- 标签页四 `p-pk`：股票 PK，用户自选最多 8 只股票和日期区间对比。内容在 `<template id="tpl-pk">`；数据集 `datasets/pk_prices`、`datasets/pk_calendar`（`pk.py` 生成，日线对数价差分编码）。所选股票和日期存在页面参数 `pk_tickers`、`pk_start`、`pk_end`，只在页面里计算，不重新取数。
 - 新策略继续加标签页，不要改动已有标签页。
 
 ## 策略口径
@@ -64,6 +65,8 @@ pip install yfinance pandas requests lxml
 |---|---|
 | `bt2.py` | 策略一，生成 `yearly.csv`、`picks.csv`、`gaps.json`，也是其他脚本引用的核心 |
 | `s2.py` | 策略二，生成 `top1.csv` |
+| `pk.py` | 股票 PK 标签页的数据，生成 `pk_prices.json`、`pk_calendar.json` |
+| `vix.py` | 用 VIX 管理 QQQ 仓位的各种做法（`--sens`、`--fear`、`--pct`），只打印；VIX 数据在 `vix.csv` |
 | `s3.py` | 策略三（前三 + 回撤减半 + 止损），用日线逐日模拟，生成 `s3_yearly.csv`、`s3_picks.csv` |
 | `topn.py` | 前 1 到 10 名对比，只打印 |
 | `dd.py` | QQQ 回撤控制对比，只打印，运行时联网下载 |
