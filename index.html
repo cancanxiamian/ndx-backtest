@@ -455,10 +455,11 @@
     </section>
     <section class="card" id="pn-chart-card">
       <h2>走势和恐慌区间</h2>
-      <p class="note">上图：从起始日算起的涨跌幅（对数刻度，翻一倍和再翻一倍的高度相同）；下图：VIX 和 VXN 的数值，进入恐慌时线条变红。浅红色竖条是按当前定义识别出的每一次恐慌；点击下表的某一次，图上会标出它的买入日和卖出日。</p>
+      <p class="note">上图：从起始日算起的涨跌幅（对数刻度，翻一倍和再翻一倍的高度相同）；下图：VIX 和 VXN 的数值，进入恐慌时线条变红。浅红色竖条是按当前定义识别出的每一次恐慌；点击下面“每一次恐慌”表里的某一行，图上会用灰色阴影标出这一笔的持有期（买入日到卖出日），再点一次取消。</p>
       <div class="legend" id="pn-lg"></div>
       <div class="pk-row" style="gap:8px;min-height:28px"><span class="note">电脑上：在图上滚动鼠标滚轮放大、缩小，按住拖动或用触控板左右滑动来平移，双击还原。</span>
         <span class="note" id="pn-zoom-range"></span>
+        <button type="button" id="pn-focus-clear" hidden style="font:inherit;font-size:var(--cds-font-size-caption);padding:3px 10px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:transparent;color:var(--color-fg);cursor:pointer">清除标记</button>
         <button type="button" id="pn-zoom-reset" hidden style="font:inherit;font-size:var(--cds-font-size-caption);padding:3px 10px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:transparent;color:var(--color-fg);cursor:pointer">还原缩放</button></div>
       <div class="chart dash-skeleton" id="pn-chart" data-source="panic_daily" style="min-height: 470px"></div>
     </section>
@@ -1318,6 +1319,7 @@ dash.calc('s3_year_actions', {
     });
     // 选中的那一次：买入到卖出
     const fe = ev.find(e => e.key === st.focus);
+    const fc = document.getElementById('pn-focus-clear'); if (fc) fc.hidden = !fe;
     if (fe) {
       const N = st.hold * 21, sell = Math.min(fe.buy + N, i1);
       band.append('rect').attr('x', x(fe.buy)).attr('width', Math.max(1, x(sell) - x(fe.buy))).attr('y', 8).attr('height', H1 - 8).attr('fill', 'var(--color-fg)').attr('fill-opacity', 0.07);
@@ -1394,8 +1396,7 @@ dash.calc('s3_year_actions', {
         ev_.preventDefault();                       // 不让浏览器开始选中文字
         document.documentElement.style.userSelect = 'none'; document.documentElement.style.cursor = 'grabbing';
         tip.style('opacity', 0); guide.style('opacity', 0);
-        drag = { x0: ev_.clientX, vs, ve, moved: false, k: (ve - vs) / (W - m.l - m.r) * (W / (el.getBoundingClientRect().width || W)),
-          onClick: (up) => { const [px] = d3.pointer(up, el); const i = pxToI(px); const e = ev.find(e => i >= e.buy - 2 && i <= e.last + 2); if (e) { st.focus = e.key; draw(); } } };
+        drag = { x0: ev_.clientX, vs, ve, moved: false, k: (ve - vs) / (W - m.l - m.r) * (W / (el.getBoundingClientRect().width || W)) };
       });
   }
 
@@ -1515,6 +1516,7 @@ dash.calc('s3_year_actions', {
     const sr = document.getElementById('pn-start-r');
     sr.addEventListener('input', () => { if (!MONTHS) return; st.start = MONTHS[+sr.value]; drawSoon(); });
     sr.addEventListener('change', () => draw());
+    document.getElementById('pn-focus-clear').addEventListener('click', () => { st.focus = null; draw(); });
     document.getElementById('pn-zoom-reset').addEventListener('click', () => { st.view = null; redrawChart(); });
     document.getElementById('pn-all').addEventListener('click', () => { st.off.clear(); draw(); });
     document.getElementById('pn-none').addEventListener('click', () => { events(startIdx()).forEach(e => st.off.add(e.key)); draw(); });
