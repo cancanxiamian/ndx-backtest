@@ -66,6 +66,7 @@ pip install yfinance pandas requests lxml
 | `bt2.py` | 策略一，生成 `yearly.csv`、`picks.csv`、`gaps.json`，也是其他脚本引用的核心 |
 | `s2.py` | 策略二，生成 `top1.csv` |
 | `pk.py` | 股票 PK 标签页的数据，生成 `pk_prices.json`、`pk_calendar.json` |
+| `vxn.csv` | VXN 日收盘，2001-02-02 至 2026-10-20：2009-09-14 起是 Cboe 官方格式文件（GitHub rellis3/MacroFXModel 转存，与另两份转存逐日一致），之前是 FRED VXNCLS（GitHub NemesiP/volatility-forecasting 转存）；2010-04-27 的 Cboe 值是重复的旧值，改用 FRED。`source` 列标明出处 |
 | `vix.py` | 用 VIX 管理 QQQ 仓位的各种做法（`--sens`、`--fear`、`--pct`），只打印；VIX 数据在 `vix.csv` |
 | `s3.py` | 策略三（前三 + 回撤减半 + 止损），用日线逐日模拟，生成 `s3_yearly.csv`、`s3_picks.csv` |
 | `topn.py` | 前 1 到 10 名对比，只打印 |
