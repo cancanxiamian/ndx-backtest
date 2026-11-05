@@ -421,7 +421,7 @@
     </header>
     <section class="card" id="pn-controls">
       <div class="pn-grid">
-        <div class="pn-f"><span>持有时间</span><input type="range" id="pn-hold" min="1" max="36" step="1" value="12" aria-label="持有时间（月）"><b class="val" id="pn-hold-v">—</b></div>
+        <div class="pn-f"><span>持有时间</span><input type="range" id="pn-hold" min="1" max="36" step="1" value="6" aria-label="持有时间（月）"><b class="val" id="pn-hold-v">—</b></div>
         <div class="pn-f"><span id="pn-thr-l">恐慌门槛</span><input type="range" id="pn-thr" min="80" max="99" step="1" value="90" aria-label="恐慌门槛（百分位）"><b class="val" id="pn-thr-v">—</b></div>
         <div class="pn-f"><span>和过去多长时间比</span><span class="seg" id="pn-win" role="group" aria-label="百分位的比较范围"><button type="button" data-v="1" aria-pressed="false">过去 1 年</button><button type="button" data-v="3" aria-pressed="true">过去 3 年</button></span></div>
         <div class="pn-f"><span>恐慌看哪个指数</span><span class="seg" id="pn-src" role="group" aria-label="恐慌指标"><button type="button" data-v="vix" aria-pressed="true">VIX（标普500）</button><button type="button" data-v="vxn" aria-pressed="false">VXN（纳指100）</button></span></div>
@@ -1134,7 +1134,7 @@ dash.calc('s3_year_actions', {
   const WIN = () => st.win === '1' ? '1 年' : '3 年';
   const PF = (src) => src + (st.win === '1' ? '_p1' : '_p');
   const ASSETS = [['qqq', 'QQQ', '纳指100'], ['spy', '标普500', 'SPY'], ['soxx', '费城半导体', 'SOXX']];
-  const st = { src: 'vix', win: '3', thr: 90, hold: 12, start: null, mode: 'first', show: { qqq: true, spy: true, soxx: true, vix: true, vxn: true }, off: new Set(), focus: null };
+  const st = { src: 'vix', win: '3', thr: 90, hold: 6, start: null, mode: 'first', show: { qqq: true, spy: true, soxx: true, vix: true, vxn: true }, off: new Set(), focus: null };
   let built = false, R = null, D = null;
 
   const priceColor = (a) => ({ qqq: dash.colors[0], spy: dash.colors[1], soxx: dash.colors[2] })[a];
