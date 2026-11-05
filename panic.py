@@ -5,6 +5,11 @@
 - QQQ：data_src/qqq_sixianli.csv（github.com/Sixian-Li/plain-backtest，含分红复权，与 px.pkl 的 QQQ 一致），
        之后接 px.pkl（Yahoo 复权），再接 data_src/qqq_yennanliu.csv（github.com/yennanliu/finance_data，只复权拆股）
 - 标普500：data_src/spy_sixianli.csv（同上仓库，SPY 含分红复权，与 fja05680/brownbear 的 Adj Close 一致）
+- 近期补齐（2026 年 8–11 月）：VIX 在 vix.csv 之后接 data_src/vix_vm25.csv（github.com/VM25/portfolio-lab，转自 Yahoo，
+       与 Gab1trs/Market-Dashboard、contactexepex/agentic-stock-prediction 的每日快照逐日一致；更早的日子 vix.csv 与 Cboe 官方文件一致，
+       VM25 有个别日子不一致，所以只用来补 vix.csv 之后的部分）；
+       VXN 在 vxn.csv 之后接 data_src/vxn_fred_achl.csv（github.com/achl0902-web/back-testing 转存的 FRED VXNCLS，2016 年起与 vxn.csv 逐日一致）；
+       SPY 在 sixianli 之后接 data_src/spy_gab1trs.csv（github.com/Gab1trs/Market-Dashboard，含分红复权）
 - 费城半导体：SOXX，data_src/soxx_testhound.csv（github.com/testhound/palvalidator）接 data_src/soxx_yennanliu.csv，
        两者重叠部分逐日一致；只复权拆股，不含分红
 拼接方法：后一段从前一段最后一天起按日收益率接上。
@@ -19,10 +24,13 @@ def chain(*parts):
         out = pd.concat([out, out.iloc[-1] * p.iloc[1:] / p.iloc[0]])
     return out[~out.index.duplicated()]
 rd = lambda f, dc, vc, fmt=None: pd.read_csv(f).assign(_d=lambda x: pd.to_datetime(x[dc], format=fmt)).set_index('_d')[vc].astype(float)
-vix = pd.read_csv('vix.csv', index_col=0, parse_dates=True)['CLOSE']
-vxn = pd.read_csv('vxn.csv', index_col=0, parse_dates=True)['close']
+def extend(base, more):
+    more = more.dropna(); return pd.concat([base, more[more.index > base.index[-1]]])
+vix = extend(pd.read_csv('vix.csv', index_col=0, parse_dates=True)['CLOSE'], pd.read_csv('data_src/vix_vm25.csv', index_col=0, parse_dates=True)['VIX'])
+vxn = extend(pd.read_csv('vxn.csv', index_col=0, parse_dates=True)['close'],
+             pd.to_numeric(pd.read_csv('data_src/vxn_fred_achl.csv', index_col=0, parse_dates=True)['VXNCLS'], errors='coerce'))
 qqq = chain(rd('data_src/qqq_sixianli.csv', 'date', 'close'), pd.read_pickle('px.pkl')['QQQ'], rd('data_src/qqq_yennanliu.csv', 'date', 'close'))
-spy = rd('data_src/spy_sixianli.csv', 'date', 'close')
+spy = chain(rd('data_src/spy_sixianli.csv', 'date', 'close'), pd.read_csv('data_src/spy_gab1trs.csv', index_col=0, parse_dates=True).iloc[:, 0])
 soxx = chain(rd('data_src/soxx_testhound.csv', 'Date/Time', 'Close', '%m/%d/%Y'), rd('data_src/soxx_yennanliu.csv', 'date', 'close'))
 # 交易日历：QQQ 或 SPY 有收盘价的日子。各来源在休市日残留的行（如 VIX 的假日行）一律去掉，再算百分位
 mkt = qqq.index.union(spy.index)
