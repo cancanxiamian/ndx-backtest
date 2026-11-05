@@ -426,7 +426,8 @@
         <div class="pn-f"><span>和过去多长时间比</span><span class="seg" id="pn-win" role="group" aria-label="百分位的比较范围"><button type="button" data-v="1" aria-pressed="false">过去 1 年</button><button type="button" data-v="3" aria-pressed="true">过去 3 年</button></span></div>
         <div class="pn-f"><span>恐慌看哪个指数</span><span class="seg" id="pn-src" role="group" aria-label="恐慌指标"><button type="button" data-v="vix" aria-pressed="true">VIX（标普500）</button><button type="button" data-v="vxn" aria-pressed="false">VXN（纳指100）</button></span></div>
         <div class="pn-f"><span>买入方式</span><span class="seg" id="pn-mode" role="group" aria-label="买入方式"><button type="button" data-v="first" aria-pressed="true">首日一次买入</button><button type="button" data-v="each" aria-pressed="false">恐慌期间每天分批买</button></span></div>
-        <div class="pn-f"><span>起始时间</span><span class="pk-row" style="gap:6px"><input type="date" id="pn-start" aria-label="起始日期" style="font:inherit;padding:4px 8px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg);color:var(--color-fg)">
+        <div class="pn-f" style="grid-column: 1 / -1"><span>起始时间（拖动滑块按月调整，也可以直接选日期）</span><span class="pk-row" style="gap:6px"><input type="date" id="pn-start" aria-label="起始日期" style="font:inherit;padding:4px 8px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg);color:var(--color-fg)">
+          <input type="range" id="pn-start-r" min="0" max="1" step="1" value="0" aria-label="起始时间（按月滑动）" style="width:100%;accent-color:var(--mo-accent)">
           <span class="seg" id="pn-quick" role="group" aria-label="快捷起始时间"><button type="button" data-v="rel2">近两年</button><button type="button" data-v="2000-01-01">2000</button><button type="button" data-v="2008-01-01">2008</button><button type="button" data-v="2010-01-01">2010</button><button type="button" data-v="2016-01-01">2016</button><button type="button" data-v="2020-01-01">2020</button></span></span></div>
         <div class="pn-f"><span>图上显示</span><div class="pn-show" id="pn-show"></div></div>
       </div>
@@ -438,6 +439,15 @@
         <table id="pn-stbl"><thead><tr>
           <th class="l">买入</th><th>恐慌买入 · 平均</th><th>中位数</th><th>赚钱次数</th><th>最好</th><th>最差</th><th>随便哪天买 · 平均</th><th>随便哪天买 · 赚钱比例</th>
         </tr></thead><tbody></tbody></table>
+      </div>
+      <div id="pn-open" hidden>
+        <h2 style="margin-top: var(--cds-gap-md)" id="pn-open-h">还在持有中</h2>
+        <p class="note" id="pn-open-note">—</p>
+        <div class="tablewrap" data-source="panic_daily">
+          <table id="pn-otbl"><thead><tr>
+            <th class="l">首个恐慌日</th><th>已持有</th><th>QQQ</th><th>标普500</th><th>费城半导体</th><th class="l">计划卖出日</th>
+          </tr></thead><tbody></tbody></table>
+        </div>
       </div>
     </section>
     <section class="card" id="pn-chart-card">
@@ -1133,6 +1143,8 @@ dash.calc('s3_year_actions', {
   const fmtM = (m) => m % 12 === 0 ? (m / 12) + ' 年' : (m > 12 ? Math.floor(m / 12) + ' 年 ' + (m % 12) + ' 个月' : m + ' 个月');
   // 默认起始时间：最新数据所在年份往前两年的 1 月 1 日
   const rel2 = () => (+D[D.length - 1].slice(0, 4) - 2) + '-01-01';
+  let MONTHS = null;                         // 每个月第一个交易日，滑块的刻度
+  let raf = 0; const drawSoon = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; draw(); }); };
   const startIdx = () => { let lo = 0, hi = D.length - 1, a = D.length - 1; while (lo <= hi) { const m = (lo + hi) >> 1; if (D[m] >= st.start) { a = m; hi = m - 1; } else lo = m + 1; } return a; };
   const isPanic = (i, src = st.src) => { const p = R[i][PF(src)]; return p != null && p >= st.thr; };
 
@@ -1292,6 +1304,8 @@ dash.calc('s3_year_actions', {
     document.querySelectorAll('#pn-mode button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.mode)));
     document.querySelectorAll('#pn-quick button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.v === 'rel2' ? rel2() : b.dataset.v) === st.start)));
     const sd = document.getElementById('pn-start'); sd.min = D[0]; sd.max = D[D.length - 1]; if (sd !== document.activeElement) sd.value = st.start;
+    const sr = document.getElementById('pn-start-r');
+    if (sr !== document.activeElement) { let k = MONTHS.findIndex(d => d >= st.start); if (k < 0) k = MONTHS.length - 1; sr.max = MONTHS.length - 1; sr.value = k; }
     paintShow(); legend();
     const ev = events(s0);
     if (st.focus && !ev.some(e => e.key === st.focus)) st.focus = null;
@@ -1317,6 +1331,26 @@ dash.calc('s3_year_actions', {
     const done = on.filter(e => { const r = evReturn(e, 'qqq', N); return r && !r.partial; }).length;
     document.getElementById('pn-sum-note').textContent = '从 ' + D[s0] + ' 起，按 ' + st.src.toUpperCase() + ' 过去 ' + WIN() + ' ' + st.thr + ' 分位的标准，共 ' + ev.length + ' 次恐慌，计入统计 ' + on.length + ' 次（其中已满持有时间的 ' + done + ' 次，各资产按自己有数据的次数计）。'
       + (st.mode === 'first' ? '每次在第一个恐慌日收盘买入。' : '每次恐慌里每个恐慌日各买一份，收益取平均。') + '“恐慌买入 · 平均”超过“随便哪天买”时加粗。';
+    // 还在持有中的：按最新价格算浮动盈亏
+    const open = on.map(e => ({ e, rs: ASSETS.map(([a]) => evReturn(e, a, N)) })).filter(o => o.rs.some(r => r && r.partial));
+    const ob = document.getElementById('pn-open'); ob.hidden = !open.length;
+    if (open.length) {
+      const last = R.length - 1;
+      document.getElementById('pn-open-h').textContent = '还在持有中（' + open.length + ' 次，不计入上面的统计）';
+      document.getElementById('pn-open-note').textContent = '这些恐慌买入后还没满 ' + fmtM(st.hold) + '，下面是按 ' + D[last] + ' 收盘价算的浮动盈亏，到期前还会变。'
+        + (st.mode === 'each' ? '分批买入时，“已持有”按第一笔算，收益是各笔的平均。' : '');
+      const ot = document.querySelector('#pn-otbl tbody'); ot.innerHTML = '';
+      open.slice().reverse().forEach(({ e, rs }) => {
+        const tr = document.createElement('tr'); tr.dataset.key = e.key; tr.style.cursor = 'pointer';
+        const add = (t, c) => { const td = document.createElement('td'); td.textContent = t; if (c) td.className = c; tr.appendChild(td); return td; };
+        const held = last - e.buy;
+        add(D[e.buy], 'l'); add(held + ' 个交易日（约 ' + (held / 21).toFixed(1) + ' 个月）');
+        rs.forEach(r => add(r ? pct(r.r) : '—', r ? (r.r >= 0 ? 'up' : 'down') : ''));
+        add(e.buy + N < R.length ? D[e.buy + N] : '约 ' + Math.ceil((e.buy + N - last) / 21) + ' 个月后', 'l join');
+        tr.addEventListener('click', () => { st.focus = e.key; draw(); document.getElementById('pn-chart-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+        ot.appendChild(tr);
+      });
+    }
     // 一句话
     const tk = document.getElementById('pn-take'); unskel(tk); tk.textContent = '';
     const q = res[0];
@@ -1360,6 +1394,9 @@ dash.calc('s3_year_actions', {
     const sd = document.getElementById('pn-start');
     sd.addEventListener('change', () => { if (sd.value && sd.validity.valid && sd.value >= sd.min && sd.value <= sd.max) { st.start = sd.value; draw(); } });
     sd.addEventListener('blur', () => draw());
+    const sr = document.getElementById('pn-start-r');
+    sr.addEventListener('input', () => { if (!MONTHS) return; st.start = MONTHS[+sr.value]; drawSoon(); });
+    sr.addEventListener('change', () => draw());
     document.getElementById('pn-all').addEventListener('click', () => { st.off.clear(); draw(); });
     document.getElementById('pn-none').addEventListener('click', () => { events(startIdx()).forEach(e => st.off.add(e.key)); draw(); });
   };
@@ -1372,6 +1409,7 @@ dash.calc('s3_year_actions', {
     if (!R) {
       R = d.data; D = R.map(r => r.d);
       if (!st.start) st.start = rel2();
+      MONTHS = D.filter((d, i) => i === 0 || d.slice(0, 7) !== D[i - 1].slice(0, 7));
       const last = k => { for (let i = R.length - 1; i >= 0; i--) if (R[i][k] != null) return R[i].d; return '—'; };
       document.getElementById('pn-ends').textContent = 'QQQ ' + last('qqq') + '，标普500（SPY）' + last('spy') + '，费城半导体（SOXX）' + last('soxx') + '，VIX ' + last('vix') + '，VXN ' + last('vxn');
     }
