@@ -95,6 +95,7 @@
 .mo #pn-etbl tr.off td:not(:first-child) { opacity: .45; }
 .mo .pn-tablebox { max-height: 30rem; overflow: auto; }
 .mo .pn-tablebox th { z-index: 1; }
+.mo #pn-chart { user-select: none; -webkit-user-select: none; }
 .mo td.part { color: var(--color-fg-muted); font-style: italic; }
 </style>
 
@@ -1242,6 +1243,28 @@ dash.calc('s3_year_actions', {
 
   // 图表缩放：st.view = [起, 止]（交易日下标），只改变图表显示的范围，不影响统计
   let lastS0 = null, chartArgs = null, zraf = 0;
+  let drag = null;   // 拖动状态放在图表外：拖动中图表会重画，状态不能跟着旧图一起丢掉
+  const setViewG = (a, b) => {
+    if (!chartArgs || !R) return;
+    const s0 = chartArgs[1], i1 = R.length - 1;
+    const span = Math.max(15, Math.min(i1 - s0, b - a));
+    a = Math.max(s0, Math.min(i1 - span, a)); b = a + span;
+    st.view = (a <= s0 && b >= i1) ? null : [a, b]; redrawChart();
+  };
+  window.addEventListener('pointermove', ev => {
+    if (!drag) return;
+    const dx = ev.clientX - drag.x0; if (Math.abs(dx) > 3) drag.moved = true;
+    if (!drag.moved) return;
+    ev.preventDefault();
+    const sh = -dx * drag.k; setViewG(drag.vs + sh, drag.ve + sh);
+  });
+  const endDrag = (ev, cancelled) => {
+    const d = drag; if (!d) return; drag = null;
+    document.documentElement.style.userSelect = ''; document.documentElement.style.cursor = '';
+    if (!cancelled && !d.moved && d.onClick) d.onClick(ev);
+  };
+  window.addEventListener('pointerup', ev => endDrag(ev, false));
+  window.addEventListener('pointercancel', ev => endDrag(ev, true));
   const redrawChart = () => { if (zraf) return; zraf = requestAnimationFrame(() => { zraf = 0; if (chartArgs) drawChart(...chartArgs); }); };
   function drawChart(el, s0, ev) {
     chartArgs = [el, s0, ev];
@@ -1340,13 +1363,9 @@ dash.calc('s3_year_actions', {
     const guide = svg.append('line').attr('y1', 8).attr('y2', H1 + GAPY + H2).attr('stroke', 'var(--cds-chart-axis)').style('opacity', 0);
     const maps = pr.map(s => new Map(s.pts));
     const pxToI = (px) => Math.max(vs, Math.min(ve, Math.round(x.invert(px))));
-    const setView = (a, b) => {
-      let span = Math.max(MINSPAN, Math.min(i1 - s0, b - a));
-      a = Math.max(s0, Math.min(i1 - span, a)); b = a + span;
-      st.view = (a <= s0 && b >= i1) ? null : [a, b]; redrawChart();
-    };
-    let drag = null;
-    const ov = svg.append('rect').attr('x', m.l).attr('width', W - m.l - m.r).attr('y', 0).attr('height', H - 20).attr('fill', 'transparent').style('cursor', 'crosshair');
+    const setView = setViewG;
+    const ov = svg.append('rect').attr('x', m.l).attr('width', W - m.l - m.r).attr('y', 0).attr('height', H - 20).attr('fill', 'transparent')
+      .style('cursor', drag && drag.moved ? 'grabbing' : (zoomed ? 'grab' : 'crosshair'));
     ov.on('mousemove', ev_ => {
         if (drag) return;
         const [px, py] = d3.pointer(ev_, el); const i = pxToI(px);
@@ -1372,19 +1391,11 @@ dash.calc('s3_year_actions', {
       .on('dblclick', ev_ => { ev_.preventDefault(); st.view = null; redrawChart(); })
       .on('pointerdown', ev_ => {
         if (ev_.button !== 0) return;
-        drag = { x0: ev_.clientX, vs, ve, moved: false, k: (ve - vs) / (W - m.l - m.r) * (W / el.getBoundingClientRect().width || 1) };
-        ov.node().setPointerCapture?.(ev_.pointerId);
-      })
-      .on('pointermove', ev_ => {
-        if (!drag) return;
-        const dx = ev_.clientX - drag.x0; if (Math.abs(dx) > 3) drag.moved = true;
-        if (!drag.moved) return;
-        tip.style('opacity', 0); guide.style('opacity', 0); ov.style('cursor', 'grabbing');
-        const sh = -dx * drag.k; setView(drag.vs + sh, drag.ve + sh);
-      })
-      .on('pointerup', ev_ => {
-        const d = drag; drag = null; ov.style('cursor', 'crosshair');
-        if (d && !d.moved) { const [px] = d3.pointer(ev_, el); const i = pxToI(px); const e = ev.find(e => i >= e.buy - 2 && i <= e.last + 2); if (e) { st.focus = e.key; draw(); } }
+        ev_.preventDefault();                       // 不让浏览器开始选中文字
+        document.documentElement.style.userSelect = 'none'; document.documentElement.style.cursor = 'grabbing';
+        tip.style('opacity', 0); guide.style('opacity', 0);
+        drag = { x0: ev_.clientX, vs, ve, moved: false, k: (ve - vs) / (W - m.l - m.r) * (W / (el.getBoundingClientRect().width || W)),
+          onClick: (up) => { const [px] = d3.pointer(up, el); const i = pxToI(px); const e = ev.find(e => i >= e.buy - 2 && i <= e.last + 2); if (e) { st.focus = e.key; draw(); } } };
       });
   }
 
