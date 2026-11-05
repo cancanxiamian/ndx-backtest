@@ -416,13 +416,14 @@
   <template id="tpl-panic">
     <header class="head">
       <h1>恐慌时买入</h1>
-      <p class="lede">“恐慌”的定义：当天的 VIX（或 VXN）比过去 3 年里指定比例的交易日都高。连续出现、中间间隔不超过 21 个交易日（约一个月）的恐慌日算作同一次恐慌。在恐慌时买入，持有指定时间后卖出，看收益，并和“随便哪天买入、持有同样时间”比较。</p>
+      <p class="lede">“恐慌”的定义：当天的 VIX（或 VXN）比过去一段时间（1 年或 3 年，可以切换）里指定比例的交易日都高。连续出现、中间间隔不超过 21 个交易日（约一个月）的恐慌日算作同一次恐慌。在恐慌时买入，持有指定时间后卖出，看收益，并和“随便哪天买入、持有同样时间”比较。</p>
       <p class="take dash-skeleton" id="pn-take">—</p>
     </header>
     <section class="card" id="pn-controls">
       <div class="pn-grid">
         <div class="pn-f"><span>持有时间</span><input type="range" id="pn-hold" min="1" max="36" step="1" value="12" aria-label="持有时间（月）"><b class="val" id="pn-hold-v">—</b></div>
-        <div class="pn-f"><span>恐慌门槛：比过去 3 年里多少交易日都高</span><input type="range" id="pn-thr" min="80" max="99" step="1" value="90" aria-label="恐慌门槛（百分位）"><b class="val" id="pn-thr-v">—</b></div>
+        <div class="pn-f"><span id="pn-thr-l">恐慌门槛</span><input type="range" id="pn-thr" min="80" max="99" step="1" value="90" aria-label="恐慌门槛（百分位）"><b class="val" id="pn-thr-v">—</b></div>
+        <div class="pn-f"><span>和过去多长时间比</span><span class="seg" id="pn-win" role="group" aria-label="百分位的比较范围"><button type="button" data-v="1" aria-pressed="false">过去 1 年</button><button type="button" data-v="3" aria-pressed="true">过去 3 年</button></span></div>
         <div class="pn-f"><span>恐慌看哪个指数</span><span class="seg" id="pn-src" role="group" aria-label="恐慌指标"><button type="button" data-v="vix" aria-pressed="true">VIX（标普500）</button><button type="button" data-v="vxn" aria-pressed="false">VXN（纳指100）</button></span></div>
         <div class="pn-f"><span>买入方式</span><span class="seg" id="pn-mode" role="group" aria-label="买入方式"><button type="button" data-v="first" aria-pressed="true">首日一次买入</button><button type="button" data-v="each" aria-pressed="false">恐慌期间每天分批买</button></span></div>
         <div class="pn-f"><span>起始时间</span><span class="pk-row" style="gap:6px"><input type="date" id="pn-start" aria-label="起始日期" style="font:inherit;padding:4px 8px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg);color:var(--color-fg)">
@@ -458,7 +459,7 @@
     <section class="card" id="pn-method">
       <h2>数据和口径</h2>
       <ol class="method">
-        <li>百分位：当天收盘的 VIX（或 VXN）在过去 756 个交易日（约 3 年，含当天）里，比它低的天数占比，只用当天及以前的数据。</li>
+        <li>百分位：当天收盘的 VIX（或 VXN）在过去 252 个交易日（约 1 年）或 756 个交易日（约 3 年）里，比它低的天数占比，只用当天及以前的数据。1 年的比较范围适应得快：高波动持续几个月后，同样的数值就不再算“高”；3 年的更稳定。</li>
         <li>买入和卖出都按收盘价。首日一次买入：在每次恐慌的第一个恐慌日收盘买入。分批买入：这次恐慌里每个恐慌日各买一份。持有时间按每月 21 个交易日折算。不计手续费和税。</li>
         <li>“随便哪天买”：起始时间之后的每一个交易日都买入一次、持有同样时间，取平均，用来对照。</li>
         <li>价格：QQQ 代表纳指100，SPY 代表标普500（VOO 2010 年才上市，用历史更长的 SPY），SOXX 代表费城半导体。QQQ、SPY 是含分红的复权价；SOXX 只复权了拆股，不含分红（每年少算约 1% 左右）。</li>
@@ -1119,9 +1120,11 @@ dash.calc('s3_year_actions', {
     let top = y - th - 8; if (top < 0) top = y + 12;
     tip.style.left = left + 'px'; tip.style.top = top + 'px';
   };
-  const GAP = 21, WIN = '3 年';
+  const GAP = 21;
+  const WIN = () => st.win === '1' ? '1 年' : '3 年';
+  const PF = (src) => src + (st.win === '1' ? '_p1' : '_p');
   const ASSETS = [['qqq', 'QQQ', '纳指100'], ['spy', '标普500', 'SPY'], ['soxx', '费城半导体', 'SOXX']];
-  const st = { src: 'vix', thr: 90, hold: 12, start: '2010-01-01', mode: 'first', show: { qqq: true, spy: true, soxx: true, vix: true, vxn: true }, off: new Set(), focus: null };
+  const st = { src: 'vix', win: '3', thr: 90, hold: 12, start: '2010-01-01', mode: 'first', show: { qqq: true, spy: true, soxx: true, vix: true, vxn: true }, off: new Set(), focus: null };
   let built = false, R = null, D = null;
 
   const priceColor = (a) => ({ qqq: dash.colors[0], spy: dash.colors[1], soxx: dash.colors[2] })[a];
@@ -1129,7 +1132,7 @@ dash.calc('s3_year_actions', {
   const volPanic = () => css('--cds-chart-status-critical', '#d33');
   const fmtM = (m) => m % 12 === 0 ? (m / 12) + ' 年' : (m > 12 ? Math.floor(m / 12) + ' 年 ' + (m % 12) + ' 个月' : m + ' 个月');
   const startIdx = () => { let lo = 0, hi = D.length - 1, a = D.length - 1; while (lo <= hi) { const m = (lo + hi) >> 1; if (D[m] >= st.start) { a = m; hi = m - 1; } else lo = m + 1; } return a; };
-  const isPanic = (i, src = st.src) => { const p = R[i][src + '_p']; return p != null && p >= st.thr; };
+  const isPanic = (i, src = st.src) => { const p = R[i][PF(src)]; return p != null && p >= st.thr; };
 
   function events(s0) {
     const ev = [];
@@ -1258,9 +1261,9 @@ dash.calc('s3_year_actions', {
         guide.attr('x1', x(i)).attr('x2', x(i)).style('opacity', 1);
         tip.html(''); tip.append('div').attr('class', 't').text(D[i]);
         pr.forEach((s, k) => { const v = maps[k].get(i); if (v == null) return; const r = tip.append('div').attr('class', 'r'); r.append('i').style('background', priceColor(s.a)); r.append('span').text(s.n + '  ' + num(v) + '×'); });
-        ['vix', 'vxn'].filter(k => st.show[k] && R[i][k] != null).forEach(k => { const r = tip.append('div').attr('class', 'r'); const p = R[i][k + '_p'];
+        ['vix', 'vxn'].filter(k => st.show[k] && R[i][k] != null).forEach(k => { const r = tip.append('div').attr('class', 'r'); const p = R[i][PF(k)];
           r.append('i').style('background', isPanic(i, k) ? volPanic() : volNormal());
-          r.append('span').text(k.toUpperCase() + '  ' + R[i][k].toFixed(1) + (p != null ? '（' + WIN + ' ' + Math.round(p) + ' 分位' + (isPanic(i, k) ? '，恐慌' : '') + '）' : '')); });
+          r.append('span').text(k.toUpperCase() + '  ' + R[i][k].toFixed(1) + (p != null ? '（' + WIN() + ' ' + Math.round(p) + ' 分位' + (isPanic(i, k) ? '，恐慌' : '') + '）' : '')); });
         tip.style('opacity', 1); tipAt(el, tip.node(), px, py);
       })
       .on('mouseleave', () => { tip.style('opacity', 0); guide.style('opacity', 0); })
@@ -1280,7 +1283,9 @@ dash.calc('s3_year_actions', {
     if (!built || document.getElementById('p-panic').hidden || !R) return;
     const N = st.hold * 21, s0 = startIdx();
     document.getElementById('pn-hold-v').textContent = fmtM(st.hold) + '（' + N + ' 个交易日）';
-    document.getElementById('pn-thr-v').textContent = st.thr + ' 分位以上：比过去 ' + WIN + '里 ' + st.thr + '% 的交易日都高';
+    document.getElementById('pn-thr-l').textContent = '恐慌门槛：比过去 ' + WIN() + '里多少交易日都高';
+    document.getElementById('pn-thr-v').textContent = st.thr + ' 分位以上：比过去 ' + WIN() + '里 ' + st.thr + '% 的交易日都高';
+    document.querySelectorAll('#pn-win button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.win)));
     document.querySelectorAll('#pn-src button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.src)));
     document.querySelectorAll('#pn-mode button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.mode)));
     document.querySelectorAll('#pn-quick button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.start)));
@@ -1308,7 +1313,7 @@ dash.calc('s3_year_actions', {
     });
     document.getElementById('pn-sum-h').textContent = '恐慌买入、持有 ' + fmtM(st.hold) + '的收益';
     const done = on.filter(e => { const r = evReturn(e, 'qqq', N); return r && !r.partial; }).length;
-    document.getElementById('pn-sum-note').textContent = '从 ' + D[s0] + ' 起，按 ' + st.src.toUpperCase() + ' 过去 ' + WIN + ' ' + st.thr + ' 分位的标准，共 ' + ev.length + ' 次恐慌，计入统计 ' + on.length + ' 次（其中已满持有时间的 ' + done + ' 次，各资产按自己有数据的次数计）。'
+    document.getElementById('pn-sum-note').textContent = '从 ' + D[s0] + ' 起，按 ' + st.src.toUpperCase() + ' 过去 ' + WIN() + ' ' + st.thr + ' 分位的标准，共 ' + ev.length + ' 次恐慌，计入统计 ' + on.length + ' 次（其中已满持有时间的 ' + done + ' 次，各资产按自己有数据的次数计）。'
       + (st.mode === 'first' ? '每次在第一个恐慌日收盘买入。' : '每次恐慌里每个恐慌日各买一份，收益取平均。') + '“恐慌买入 · 平均”超过“随便哪天买”时加粗。';
     // 一句话
     const tk = document.getElementById('pn-take'); unskel(tk); tk.textContent = '';
@@ -1327,7 +1332,7 @@ dash.calc('s3_year_actions', {
       const td0 = add('', 'l'); const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !st.off.has(e.key); cb.setAttribute('aria-label', '计入第 ' + e.n + ' 次恐慌');
       cb.addEventListener('click', ev_ => ev_.stopPropagation()); cb.addEventListener('change', () => { cb.checked ? st.off.delete(e.key) : st.off.add(e.key); draw(); }); td0.appendChild(cb);
       add(String(e.n), 'l'); add(D[e.buy], 'l'); add(String(e.days.length));
-      const v = R[e.buy][st.src], p = R[e.buy][st.src + '_p']; add(v.toFixed(1) + '（' + Math.round(p) + '）'); add(e.peak.toFixed(1) + '（' + D[e.peakI].slice(5) + '）', 'join');
+      const v = R[e.buy][st.src], p = R[e.buy][PF(st.src)]; add(v.toFixed(1) + '（' + Math.round(p) + '）'); add(e.peak.toFixed(1) + '（' + D[e.peakI].slice(5) + '）', 'join');
       let lastSell = null;
       ASSETS.forEach(([a]) => { const r = evReturn(e, a, N); if (!r) { add('—'); return; } lastSell = Math.max(lastSell ?? 0, r.sell); add(pct(r.r) + (r.partial ? '（持有中）' : ''), r.partial ? 'part' : (r.r >= 0 ? 'up' : 'down')); });
       const sellI = Math.min(e.buy + N, R.length - 1); add(e.buy + N < R.length ? D[sellI] : '未满（' + D[R.length - 1] + '）', 'l join');
@@ -1346,6 +1351,7 @@ dash.calc('s3_year_actions', {
     hold.value = st.hold; thr.value = st.thr;
     hold.addEventListener('input', () => { st.hold = +hold.value; draw(); });
     thr.addEventListener('input', () => { st.thr = +thr.value; draw(); });
+    document.getElementById('pn-win').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.win = v; draw(); } });
     document.getElementById('pn-src').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.src = v; draw(); } });
     document.getElementById('pn-mode').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.mode = v; draw(); } });
     document.getElementById('pn-quick').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.start = v; draw(); } });

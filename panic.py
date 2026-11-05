@@ -8,7 +8,8 @@
 - 费城半导体：SOXX，data_src/soxx_testhound.csv（github.com/testhound/palvalidator）接 data_src/soxx_yennanliu.csv，
        两者重叠部分逐日一致；只复权拆股，不含分红
 拼接方法：后一段从前一段最后一天起按日收益率接上。
-vix_p / vxn_p：当天收盘在过去 3 年（756 个交易日，含当天）里的百分位（比它低的天数占比），只用过去的数据。"""
+vix_p / vxn_p：当天收盘在过去 3 年（756 个交易日，含当天）里的百分位（比它低的天数占比），只用过去的数据；
+vix_p1 / vxn_p1：同样算法，过去 1 年（252 个交易日）。"""
 import json, numpy as np, pandas as pd
 def chain(*parts):
     out = parts[0].dropna()
@@ -27,23 +28,24 @@ soxx = chain(rd('data_src/soxx_testhound.csv', 'Date/Time', 'Close', '%m/%d/%Y')
 mkt = qqq.index.union(spy.index)
 mkt = mkt[mkt.weekday < 5]
 vix, vxn, soxx = vix[vix.index.isin(mkt)], vxn[vxn.index.isin(mkt)], soxx[soxx.index.isin(mkt)]
-pct = lambda s: s.rolling(756).apply(lambda a: (a[:-1] < a[-1]).mean() * 100, raw=True)
+pct = lambda s, w=756: s.rolling(w).apply(lambda a: (a[:-1] < a[-1]).mean() * 100, raw=True)
 vix_p, vxn_p = pct(vix), pct(vxn)
+vix_p1, vxn_p1 = pct(vix, 252), pct(vxn, 252)
 cal = mkt[mkt >= '1999-03-10']
-df = pd.DataFrame({'vix': vix, 'vxn': vxn, 'qqq': qqq, 'spy': spy, 'soxx': soxx, 'vix_p': vix_p, 'vxn_p': vxn_p}).reindex(cal)
+df = pd.DataFrame({'vix': vix, 'vxn': vxn, 'qqq': qqq, 'spy': spy, 'soxx': soxx, 'vix_p': vix_p, 'vxn_p': vxn_p, 'vix_p1': vix_p1, 'vxn_p1': vxn_p1}).reindex(cal)
 # 只在有交易的日子保留价格（不同来源的假日不一致时不前向填充，避免假的零收益）
 rows = []
 for d, r in df.iterrows():
     o = {'d': str(d.date())}
     for k in ('vix', 'vxn'): o[k] = None if np.isnan(r[k]) else round(float(r[k]), 2)
     for k in ('qqq', 'spy', 'soxx'): o[k] = None if np.isnan(r[k]) else float(f'{r[k]:.6g}')
-    for k in ('vix_p', 'vxn_p'): o[k] = None if np.isnan(r[k]) else round(float(r[k]), 1)
+    for k in ('vix_p', 'vxn_p', 'vix_p1', 'vxn_p1'): o[k] = None if np.isnan(r[k]) else round(float(r[k]), 1)
     rows.append(o)
 json.dump(rows, open('panic_daily.json', 'w'), separators=(',', ':'))
 if __name__ == '__main__':
     import os
     print(len(rows), 'rows', rows[0]['d'], '→', rows[-1]['d'], os.path.getsize('panic_daily.json') // 1024, 'KB')
-    for k in ('vix', 'vxn', 'qqq', 'spy', 'soxx', 'vix_p', 'vxn_p'):
+    for k in ('vix', 'vxn', 'qqq', 'spy', 'soxx', 'vix_p', 'vxn_p', 'vix_p1', 'vxn_p1'):
         s = df[k].dropna(); print(f'{k:6s} {s.index[0].date()} → {s.index[-1].date()} n={len(s)}')
     # 抽查：2020-03-16 前后
     print(df.loc['2020-03-13':'2020-03-17'])
