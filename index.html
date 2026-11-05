@@ -427,7 +427,7 @@
         <div class="pn-f"><span>恐慌看哪个指数</span><span class="seg" id="pn-src" role="group" aria-label="恐慌指标"><button type="button" data-v="vix" aria-pressed="true">VIX（标普500）</button><button type="button" data-v="vxn" aria-pressed="false">VXN（纳指100）</button></span></div>
         <div class="pn-f"><span>买入方式</span><span class="seg" id="pn-mode" role="group" aria-label="买入方式"><button type="button" data-v="first" aria-pressed="true">首日一次买入</button><button type="button" data-v="each" aria-pressed="false">恐慌期间每天分批买</button></span></div>
         <div class="pn-f"><span>起始时间</span><span class="pk-row" style="gap:6px"><input type="date" id="pn-start" aria-label="起始日期" style="font:inherit;padding:4px 8px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg);color:var(--color-fg)">
-          <span class="seg" id="pn-quick" role="group" aria-label="快捷起始时间"><button type="button" data-v="2000-01-01">2000</button><button type="button" data-v="2008-01-01">2008</button><button type="button" data-v="2010-01-01">2010</button><button type="button" data-v="2016-01-01">2016</button><button type="button" data-v="2020-01-01">2020</button></span></span></div>
+          <span class="seg" id="pn-quick" role="group" aria-label="快捷起始时间"><button type="button" data-v="rel2">近两年</button><button type="button" data-v="2000-01-01">2000</button><button type="button" data-v="2008-01-01">2008</button><button type="button" data-v="2010-01-01">2010</button><button type="button" data-v="2016-01-01">2016</button><button type="button" data-v="2020-01-01">2020</button></span></span></div>
         <div class="pn-f"><span>图上显示</span><div class="pn-show" id="pn-show"></div></div>
       </div>
     </section>
@@ -1124,13 +1124,15 @@ dash.calc('s3_year_actions', {
   const WIN = () => st.win === '1' ? '1 年' : '3 年';
   const PF = (src) => src + (st.win === '1' ? '_p1' : '_p');
   const ASSETS = [['qqq', 'QQQ', '纳指100'], ['spy', '标普500', 'SPY'], ['soxx', '费城半导体', 'SOXX']];
-  const st = { src: 'vix', win: '3', thr: 90, hold: 12, start: '2010-01-01', mode: 'first', show: { qqq: true, spy: true, soxx: true, vix: true, vxn: true }, off: new Set(), focus: null };
+  const st = { src: 'vix', win: '3', thr: 90, hold: 12, start: null, mode: 'first', show: { qqq: true, spy: true, soxx: true, vix: true, vxn: true }, off: new Set(), focus: null };
   let built = false, R = null, D = null;
 
   const priceColor = (a) => ({ qqq: dash.colors[0], spy: dash.colors[1], soxx: dash.colors[2] })[a];
   const volNormal = () => css('--cds-chart-muted', '#999');
   const volPanic = () => css('--cds-chart-status-critical', '#d33');
   const fmtM = (m) => m % 12 === 0 ? (m / 12) + ' 年' : (m > 12 ? Math.floor(m / 12) + ' 年 ' + (m % 12) + ' 个月' : m + ' 个月');
+  // 默认起始时间：最新数据所在年份往前两年的 1 月 1 日
+  const rel2 = () => (+D[D.length - 1].slice(0, 4) - 2) + '-01-01';
   const startIdx = () => { let lo = 0, hi = D.length - 1, a = D.length - 1; while (lo <= hi) { const m = (lo + hi) >> 1; if (D[m] >= st.start) { a = m; hi = m - 1; } else lo = m + 1; } return a; };
   const isPanic = (i, src = st.src) => { const p = R[i][PF(src)]; return p != null && p >= st.thr; };
 
@@ -1288,7 +1290,7 @@ dash.calc('s3_year_actions', {
     document.querySelectorAll('#pn-win button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.win)));
     document.querySelectorAll('#pn-src button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.src)));
     document.querySelectorAll('#pn-mode button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.mode)));
-    document.querySelectorAll('#pn-quick button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === st.start)));
+    document.querySelectorAll('#pn-quick button').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.v === 'rel2' ? rel2() : b.dataset.v) === st.start)));
     const sd = document.getElementById('pn-start'); sd.min = D[0]; sd.max = D[D.length - 1]; if (sd !== document.activeElement) sd.value = st.start;
     paintShow(); legend();
     const ev = events(s0);
@@ -1354,7 +1356,7 @@ dash.calc('s3_year_actions', {
     document.getElementById('pn-win').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.win = v; draw(); } });
     document.getElementById('pn-src').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.src = v; draw(); } });
     document.getElementById('pn-mode').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.mode = v; draw(); } });
-    document.getElementById('pn-quick').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v) { st.start = v; draw(); } });
+    document.getElementById('pn-quick').addEventListener('click', e => { const v = e.target.closest('button')?.dataset.v; if (v && D) { st.start = v === 'rel2' ? rel2() : v; draw(); } });
     const sd = document.getElementById('pn-start');
     sd.addEventListener('change', () => { if (sd.value && sd.validity.valid && sd.value >= sd.min && sd.value <= sd.max) { st.start = sd.value; draw(); } });
     sd.addEventListener('blur', () => draw());
@@ -1369,6 +1371,7 @@ dash.calc('s3_year_actions', {
     if (d.status !== 'ok') return;
     if (!R) {
       R = d.data; D = R.map(r => r.d);
+      if (!st.start) st.start = rel2();
       const last = k => { for (let i = R.length - 1; i >= 0; i--) if (R[i][k] != null) return R[i].d; return '—'; };
       document.getElementById('pn-ends').textContent = 'QQQ ' + last('qqq') + '，标普500（SPY）' + last('spy') + '，费城半导体（SOXX）' + last('soxx') + '，VIX ' + last('vix') + '，VXN ' + last('vxn');
     }
