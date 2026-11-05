@@ -442,7 +442,7 @@
     </section>
     <section class="card" id="pn-chart-card">
       <h2>走势和恐慌区间</h2>
-      <p class="note">上图：价格从起始日算起的倍数，对数刻度；下图：VIX 和 VXN 的数值，进入恐慌时线条变红。浅红色竖条是按当前定义识别出的每一次恐慌；点击下表的某一次，图上会标出它的买入日和卖出日。</p>
+      <p class="note">上图：从起始日算起的涨跌幅（对数刻度，翻一倍和再翻一倍的高度相同）；下图：VIX 和 VXN 的数值，进入恐慌时线条变红。浅红色竖条是按当前定义识别出的每一次恐慌；点击下表的某一次，图上会标出它的买入日和卖出日。</p>
       <div class="legend" id="pn-lg"></div>
       <div class="chart dash-skeleton" id="pn-chart" data-source="panic_daily" style="min-height: 470px"></div>
     </section>
@@ -1204,7 +1204,7 @@ dash.calc('s3_year_actions', {
     if (t1.length > 7) t1 = t1.filter(t => [0.5, 1, 2, 5, 10, 20, 50, 100].includes(t));
     const t2 = y2.ticks(4);
     const probe = svg.append('text').attr('font-size', 12); let lw = 0;
-    [...t1.map(t => t + '×'), ...t2.map(String)].forEach(t => { probe.text(t); lw = Math.max(lw, probe.node().getComputedTextLength()); }); probe.remove();
+    [...t1.map(t => pct(t - 1, 0)), ...t2.map(String)].forEach(t => { probe.text(t); lw = Math.max(lw, probe.node().getComputedTextLength()); }); probe.remove();
     const m = { l: lw + 10, r: 8 };
     const x = d3.scaleLinear([s0, i1], [m.l, W - m.r]);
     // 恐慌区间底色
@@ -1226,7 +1226,7 @@ dash.calc('s3_year_actions', {
     // 网格和刻度
     const g = svg.append('g');
     t1.forEach(t => { g.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y1(t)).attr('y2', y1(t)).attr('stroke', t === 1 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
-      g.append('text').attr('x', m.l - 6).attr('y', y1(t)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(t + '×'); });
+      g.append('text').attr('x', m.l - 6).attr('y', y1(t)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(pct(t - 1, 0)); });
     t2.forEach(t => { g.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y2(t)).attr('y2', y2(t)).attr('stroke', t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
       g.append('text').attr('x', m.l - 6).attr('y', y2(t)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(t); });
     if (!pr.length) g.append('text').attr('x', (m.l + W) / 2).attr('y', H1 / 2).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text('勾选上方的 QQQ、标普500 或费城半导体来显示走势');
@@ -1260,7 +1260,7 @@ dash.calc('s3_year_actions', {
         const [px, py] = d3.pointer(ev_, el); const i = Math.max(s0, Math.min(i1, Math.round(x.invert(px))));
         guide.attr('x1', x(i)).attr('x2', x(i)).style('opacity', 1);
         tip.html(''); tip.append('div').attr('class', 't').text(D[i]);
-        pr.forEach((s, k) => { const v = maps[k].get(i); if (v == null) return; const r = tip.append('div').attr('class', 'r'); r.append('i').style('background', priceColor(s.a)); r.append('span').text(s.n + '  ' + num(v) + '×'); });
+        pr.forEach((s, k) => { const v = maps[k].get(i); if (v == null) return; const r = tip.append('div').attr('class', 'r'); r.append('i').style('background', priceColor(s.a)); r.append('span').text(s.n + '  ' + pct(v - 1)); });
         ['vix', 'vxn'].filter(k => st.show[k] && R[i][k] != null).forEach(k => { const r = tip.append('div').attr('class', 'r'); const p = R[i][PF(k)];
           r.append('i').style('background', isPanic(i, k) ? volPanic() : volNormal());
           r.append('span').text(k.toUpperCase() + '  ' + R[i][k].toFixed(1) + (p != null ? '（' + WIN() + ' ' + Math.round(p) + ' 分位' + (isPanic(i, k) ? '，恐慌' : '') + '）' : '')); });
