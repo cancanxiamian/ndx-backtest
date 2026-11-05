@@ -1,5 +1,5 @@
 import json, csv
-from bt2 import c, names, yret, CLASS, DELIST, LAST
+from bt2 import c, names, yret, CLASS, DELIST, LAST, gone
 ch=json.load(open('changes.json'))
 adds={}
 for o in ch:
@@ -13,7 +13,7 @@ for Y in range(2010,2026):
     for t in uni:
         r,src=yret(t,Y)
         if r is None: gaps.append((Y,t)); continue
-        if DELIST.get(t) is not None and DELIST[t]<=Y: continue
+        if gone(t,Y): continue
         k=CLASS.get(t,t)
         if k not in best or r>best[k][0]: best[k]=(r,t)
     rk=sorted(best.values(),reverse=True)

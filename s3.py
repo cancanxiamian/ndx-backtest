@@ -8,7 +8,7 @@
 没有日线的持仓不套用规则，按全年涨跌计并标为 no_daily。
 """
 import json, csv
-from bt2 import c, names, yret, CLASS, DELIST, LAST, d, RENAME, BAD, ye
+from bt2 import c, names, yret, CLASS, DELIST, LAST, gone, d, RENAME, BAD, ye
 from s2 import rows as top1_rows
 
 HALF_DD, STOP = 0.20, 0.08
@@ -54,7 +54,7 @@ for Y in range(2010, 2026):
     best = {}
     for t in uni:
         r, _ = yret(t, Y)
-        if r is None or (DELIST.get(t) is not None and DELIST[t] <= Y): continue
+        if r is None or gone(t, Y): continue
         k = CLASS.get(t, t)
         if k not in best or r > best[k][0]: best[k] = (r, t)
     top = sorted(best.values(), reverse=True)[:3]

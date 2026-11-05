@@ -7,6 +7,7 @@ mt=json.load(open('mt.json')) if os.path.exists('mt.json') else {}
 man=json.load(open('manual.json')) if os.path.exists('manual.json') else {}
 s1=json.load(open('s1_data.json'))   # {ticker:{year:{"r":..,"src":..}}}
 DELIST=json.load(open('delist.json'))          # ticker -> year it stopped trading (partial final year)
+def gone(t,Y): return DELIST.get(t) is not None and DELIST[t]<=Y and not (t in BAD and BAD[t]<9999 and Y>=BAD[t])
 # Yahoo symbols reused by another company: first year whose return Yahoo prices correctly (9999 = never)
 BAD={'BBBY':9999,'FB':9999,'PCLN':9999,'SHLD':9999,'GOLD':9999,'LIFE':9999,'MICC':9999,'SPLS':9999,'SNDK':9999,'EA':9999,'WBD':9999,'DELL':2017,'FOX':2020,'FOXA':2020,'NWSA':2014}
 RENAME={'MYL':'VTRS','CTRP':'TCOM','HANS':'MNST','RIMM':'BB','WLTW':'WTW','SYMC':'GEN','CMCSK':'CMCSA','FB':'META','PCLN':'BKNG','LMCA':'FWONA','LMCK':'FWONK'}
@@ -37,7 +38,7 @@ for Y in range(2010,2026):
         if r is None: gaps.append((Y,t)); continue
         k=CLASS.get(t,t)
         if k not in best or r>best[k][0]: best[k]=(r,t)
-    rk=[x for x in sorted(best.values(),reverse=True) if not (DELIST.get(x[1]) is not None and DELIST[x[1]]<=Y)][:10]
+    rk=[x for x in sorted(best.values(),reverse=True) if not gone(x[1],Y)][:10]
     H=Y+1; vals=[]
     for i,(r,t) in enumerate(rk):
         h,src=yret(t,H)

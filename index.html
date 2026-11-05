@@ -54,6 +54,8 @@
 .mo .page { display: grid; gap: var(--cds-gap-xl); }
 .mo .tk { font-weight: 600; }
 .mo .join { color: var(--color-fg-muted); }
+.mo [hidden] { display: none !important; }
+.mo .card > *, .mo .page > *, .mo .head > * { min-width: 0; }
 .mo .warnbox { border: 1px solid var(--color-warn); border-left-width: 4px; border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: grid; gap: var(--cds-gap-xs); line-height: 1.6; max-width: 80ch; }
 .mo .warnbox h2 { color: var(--color-warn); font-size: var(--cds-font-size-body); }
 .mo .flag { color: var(--color-warn); font-weight: 600; }
@@ -107,17 +109,17 @@
   <div class="page" id="p-top10" role="tabpanel" aria-labelledby="tab-top10">
   <header class="head" id="top">
     <h1>纳斯达克100 追涨回测</h1>
-    <p class="lede">规则：每年年初，取当时纳斯达克100的成分股，挑出上一年涨幅最大的 10 家公司，各投 1 个单位的钱，持有一整年，看这一年每份钱变成了多少。从 2011 年到 2025 年共 15 个完整年份，2026 年截至目前的数据单独列出。</p>
+    <p class="lede">规则：每年年初，取当时纳斯达克100的成分股，挑出上一年涨幅最大的 10 家公司，各投 1 个单位的钱，持有一整年，看这一年每份钱变成了多少。从 <span data-source="summary" data-field="first_year">—</span> 年到 <span data-source="summary" data-field="last_year">—</span> 年共 <span data-source="summary" data-field="years">—</span> 个完整年份，最新一年截至目前的数据单独列出。</p>
     <p class="take dash-skeleton" id="takeaway">—</p>
   </header>
 
   <section class="tiles" aria-label="15 年汇总">
-    <div class="tile"><span class="k">策略年化收益 · 2011–2025</span><span class="v dash-skeleton" data-source="summary" data-field="strategy_cagr">—</span><span class="s">十只股票等权，每年重选</span></div>
-    <div class="tile"><span class="k">QQQ 年化收益 · 2011–2025</span><span class="v dash-skeleton" data-source="summary" data-field="qqq_cagr">—</span><span class="s">纳斯达克100 指数基金，含分红</span></div>
-    <div class="tile"><span class="k">跑赢 QQQ 的年份</span><span class="v"><span class="dash-skeleton" data-source="summary" data-field="win_years">—</span><span id="win-of"></span></span><span class="s">共 15 个完整年份</span></div>
-    <div class="tile"><span class="k">1 单位滚动 15 年后 · 策略</span><span class="v dash-skeleton" data-source="summary" data-field="strategy_growth">—</span><span class="s">每年把全部本金和收益投入下一轮</span></div>
-    <div class="tile"><span class="k">1 单位滚动 15 年后 · QQQ</span><span class="v dash-skeleton" data-source="summary" data-field="qqq_growth">—</span><span class="s">同期一直持有 QQQ</span></div>
-    <div class="tile"><span class="k">累计投入 150 单位 → 期末合计</span><span class="v dash-skeleton" data-source="summary" data-field="simple_end">—</span><span class="s">每年新投 10 单位，不滚动</span></div>
+    <div class="tile"><span class="k">策略年化收益 · <span data-source="summary" data-field="first_year">—</span>–<span data-source="summary" data-field="last_year">—</span></span><span class="v dash-skeleton" data-source="summary" data-field="strategy_cagr">—</span><span class="s">十只股票等权，每年重选</span></div>
+    <div class="tile"><span class="k">QQQ 年化收益 · <span data-source="summary" data-field="first_year">—</span>–<span data-source="summary" data-field="last_year">—</span></span><span class="v dash-skeleton" data-source="summary" data-field="qqq_cagr">—</span><span class="s">纳斯达克100 指数基金，含分红</span></div>
+    <div class="tile"><span class="k">跑赢 QQQ 的年份</span><span class="v"><span class="dash-skeleton" data-source="summary" data-field="win_years">—</span><span id="win-of"></span></span><span class="s">共 <span data-source="summary" data-field="years">—</span> 个完整年份</span></div>
+    <div class="tile"><span class="k">1 单位滚动 <span data-source="summary" data-field="years">—</span> 年后 · 策略</span><span class="v dash-skeleton" data-source="summary" data-field="strategy_growth">—</span><span class="s">每年把全部本金和收益投入下一轮</span></div>
+    <div class="tile"><span class="k">1 单位滚动 <span data-source="summary" data-field="years">—</span> 年后 · QQQ</span><span class="v dash-skeleton" data-source="summary" data-field="qqq_growth">—</span><span class="s">同期一直持有 QQQ</span></div>
+    <div class="tile"><span class="k">累计投入 <span data-source="summary" data-field="simple_in">—</span> 单位 → 期末合计</span><span class="v dash-skeleton" data-source="summary" data-field="simple_end">—</span><span class="s">每年新投 10 单位，不滚动</span></div>
   </section>
 
   <section class="grid">
@@ -182,7 +184,7 @@
       <li>持有：下一年年初各投 1 个单位，持有到年底，不调仓，不计交易费用和税。</li>
       <li>价格：还在交易的公司用 Yahoo 财经的复权收盘价，含分红再投资。已经退市或被收购的公司（如 Celgene、动视暴雪、EA、雅虎、Virgin Media）用 1stock1.com 的逐年涨跌数据，个别年份用 Macrotrends 页面的网页存档补齐。这部分是价格涨幅，不含分红。</li>
       <li>收购处理：持有期间被收购的股票，按收购对价结算，剩余时间视为现金、收益为 0。Virgin Media（2013 年）和 21 世纪福克斯（2019 年）的对价含股票和分拆股份，按交易完成日的收盘价折算。</li>
-      <li>数据缺口：仍有 12 个“公司 × 年份”找不到价格，没有参与排序，例如 2013 年的 BMC 和戴尔、2025 年的 EA 和 Ansys。按公开报道，它们当年的涨幅都明显低于前十名的门槛，不影响选股结果。</li>
+      <li>数据缺口：有 <span data-source="gaps" data-field="gaps">—</span> 个“公司 × 年份”找不到价格，没有参与排序，例如 2013 年的 BMC 和戴尔、2025 年的 EA 和 Ansys。这些公司当年的涨幅没有逐一核实：如果其中有公司超过了当年前十名的门槛，那一年选出的十只股票会不同。</li>
       <li>这是历史数据的回测，不代表未来收益，也不构成投资建议。</li>
     </ol>
     <p class="src" id="coverage" data-source="yearly">—</p>
@@ -192,16 +194,16 @@
   <template id="tpl-top1">
     <header class="head">
       <h1>全仓去年第一名</h1>
-      <p class="lede">规则：每年年初，把全部资金买入上一年涨幅最大的一只股票，年底全部卖出，下一年再换成新的第一名。候选范围是上一年任何时候在纳斯达克100里的公司，年初就在指数里的、年中加入的、12 月年度调整时加入的都算。2010 年底投入 1 个单位，一直滚动到 2025 年底。</p>
+      <p class="lede">规则：每年年初，把全部资金买入上一年涨幅最大的一只股票，年底全部卖出，下一年再换成新的第一名。候选范围是上一年任何时候在纳斯达克100里的公司，年初就在指数里的、年中加入的、12 月年度调整时加入的都算。2010 年底投入 1 个单位，一直滚动到 <span data-source="top1_summary" data-field="last_year">—</span> 年底。</p>
       <p class="take dash-skeleton" id="t2-take">—</p>
     </header>
     <section class="tiles" aria-label="策略二汇总">
-      <div class="tile"><span class="k">策略二年化收益 · 2011–2025</span><span class="v dash-skeleton" data-source="top1_summary" data-field="cagr">—</span><span class="s">每年只持有一只股票</span></div>
-      <div class="tile"><span class="k">QQQ 年化收益 · 2011–2025</span><span class="v dash-skeleton" data-source="top1_summary" data-field="qqq_cagr">—</span><span class="s">纳斯达克100 指数基金，含分红</span></div>
-      <div class="tile"><span class="k">跑赢 QQQ 的年份</span><span class="v"><span class="dash-skeleton" data-source="top1_summary" data-field="win_years">—</span><span id="t2-win-of"></span></span><span class="s">共 15 个完整年份</span></div>
-      <div class="tile"><span class="k">1 单位滚动 15 年后 · 策略二</span><span class="v dash-skeleton" data-source="top1_summary" data-field="growth">—</span><span class="s">全仓第一名</span></div>
-      <div class="tile"><span class="k">1 单位滚动 15 年后 · 策略一</span><span class="v dash-skeleton" data-source="top1_summary" data-field="top10_growth">—</span><span class="s">前十等权</span></div>
-      <div class="tile"><span class="k">1 单位滚动 15 年后 · QQQ</span><span class="v dash-skeleton" data-source="top1_summary" data-field="qqq_growth">—</span><span class="s">一直持有 QQQ</span></div>
+      <div class="tile"><span class="k">策略二年化收益 · <span data-source="top1_summary" data-field="first_year">—</span>–<span data-source="top1_summary" data-field="last_year">—</span></span><span class="v dash-skeleton" data-source="top1_summary" data-field="cagr">—</span><span class="s">每年只持有一只股票</span></div>
+      <div class="tile"><span class="k">QQQ 年化收益 · <span data-source="top1_summary" data-field="first_year">—</span>–<span data-source="top1_summary" data-field="last_year">—</span></span><span class="v dash-skeleton" data-source="top1_summary" data-field="qqq_cagr">—</span><span class="s">纳斯达克100 指数基金，含分红</span></div>
+      <div class="tile"><span class="k">跑赢 QQQ 的年份</span><span class="v"><span class="dash-skeleton" data-source="top1_summary" data-field="win_years">—</span><span id="t2-win-of"></span></span><span class="s">共 <span data-source="top1_summary" data-field="years">—</span> 个完整年份</span></div>
+      <div class="tile"><span class="k">1 单位滚动 <span data-source="top1_summary" data-field="years">—</span> 年后 · 策略二</span><span class="v dash-skeleton" data-source="top1_summary" data-field="growth">—</span><span class="s">全仓第一名</span></div>
+      <div class="tile"><span class="k">1 单位滚动 <span data-source="top1_summary" data-field="years">—</span> 年后 · 策略一</span><span class="v dash-skeleton" data-source="top1_summary" data-field="top10_growth">—</span><span class="s">前十等权</span></div>
+      <div class="tile"><span class="k">1 单位滚动 <span data-source="top1_summary" data-field="years">—</span> 年后 · QQQ</span><span class="v dash-skeleton" data-source="top1_summary" data-field="qqq_growth">—</span><span class="s">一直持有 QQQ</span></div>
     </section>
     <section class="grid">
       <div class="card" id="t2-growth">
@@ -260,12 +262,12 @@
       <p id="t3-nodaily-text">—</p>
     </section>
     <section class="tiles" aria-label="策略三汇总">
-      <div class="tile"><span class="k">1 单位滚动 15 年后 · 策略三</span><span class="v dash-skeleton" data-source="s3_summary" data-field="s3_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="s3_cagr">—</span></span></div>
+      <div class="tile"><span class="k">1 单位滚动 <span data-source="s3_summary" data-field="years">—</span> 年后 · 策略三</span><span class="v dash-skeleton" data-source="s3_summary" data-field="s3_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="s3_cagr">—</span></span></div>
       <div class="tile"><span class="k">对照：前三等权，不带卖出规则</span><span class="v dash-skeleton" data-source="s3_summary" data-field="plain_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="plain_cagr">—</span></span></div>
       <div class="tile"><span class="k">策略一：前十等权</span><span class="v dash-skeleton" data-source="s3_summary" data-field="s1_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="s1_cagr">—</span></span></div>
       <div class="tile"><span class="k">策略二：全仓第一名</span><span class="v dash-skeleton" data-source="s3_summary" data-field="s2_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="s2_cagr">—</span></span></div>
       <div class="tile"><span class="k">QQQ（含分红）</span><span class="v dash-skeleton" data-source="s3_summary" data-field="qqq_growth">—</span><span class="s">年化 <span data-source="s3_summary" data-field="qqq_cagr">—</span></span></div>
-      <div class="tile"><span class="k">策略三跑赢 QQQ 的年份</span><span class="v"><span class="dash-skeleton" data-source="s3_summary" data-field="win_years">—</span><span id="t3-win-of"></span></span><span class="s">共 15 个完整年份</span></div>
+      <div class="tile"><span class="k">策略三跑赢 QQQ 的年份</span><span class="v"><span class="dash-skeleton" data-source="s3_summary" data-field="win_years">—</span><span id="t3-win-of"></span></span><span class="s">共 <span data-source="s3_summary" data-field="years">—</span> 个完整年份</span></div>
     </section>
     <section class="grid">
       <div class="card" id="t3-growth">
@@ -454,7 +456,7 @@
       <h2>走势和恐慌区间</h2>
       <p class="note">上图：从起始日算起的涨跌幅（对数刻度，翻一倍和再翻一倍的高度相同）；下图：VIX 和 VXN 的数值，进入恐慌时线条变红。浅红色竖条是按当前定义识别出的每一次恐慌；点击下表的某一次，图上会标出它的买入日和卖出日。</p>
       <div class="legend" id="pn-lg"></div>
-      <div class="pk-row" style="gap:8px;min-height:28px"><span class="note">在图上滚动鼠标滚轮放大、缩小，按住拖动左右平移，双击还原。</span>
+      <div class="pk-row" style="gap:8px;min-height:28px"><span class="note">电脑上：在图上滚动鼠标滚轮放大、缩小，按住拖动或用触控板左右滑动来平移，双击还原。</span>
         <span class="note" id="pn-zoom-range"></span>
         <button type="button" id="pn-zoom-reset" hidden style="font:inherit;font-size:var(--cds-font-size-caption);padding:3px 10px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:transparent;color:var(--color-fg);cursor:pointer">还原缩放</button></div>
       <div class="chart dash-skeleton" id="pn-chart" data-source="panic_daily" style="min-height: 470px"></div>
@@ -490,6 +492,21 @@ const pct = (v, d = 1) => v == null || isNaN(v) ? '—' : (v >= 0 ? '+' : '') + 
 const mult = v => v == null || isNaN(v) ? '—' : v.toFixed(2) + ' 倍';
 const num = v => v == null || isNaN(v) ? '—' : v.toFixed(2);
 window.moFmt = { pct, mult, num };
+// 横轴标签：先量文字宽度，按优先级摆放，互不重叠，也不超出图表左右边缘
+// items: [{x, text, prio, fill}]；prio 越大越先放（年末未满的年份、带警告的年份优先）
+window.moXLabels = (svg, items, y, W, left = 0) => {
+  const probe = svg.append('text').attr('font-size', 12);
+  const placed = [];
+  items.map((it, k) => ({ ...it, k })).sort((a, b) => (b.prio || 0) - (a.prio || 0) || a.k - b.k).forEach(it => {
+    probe.text(it.text); const w = probe.node().getComputedTextLength();
+    const l = Math.max(left, Math.min(W - w - 1, it.x - w / 2));
+    if (placed.some(p => l < p.r + 8 && l + w > p.l - 8)) return;
+    placed.push({ l, r: l + w, it });
+  });
+  probe.remove();
+  placed.forEach(p => svg.append('text').attr('x', (p.l + p.r) / 2).attr('y', y).attr('text-anchor', 'middle').attr('font-size', 12)
+    .attr('fill', p.it.fill || 'var(--color-fg-muted)').text(p.it.text));
+};
 
 const asRows = rows => rows.map(r => ({
   ...r,
@@ -518,7 +535,7 @@ dash.calc('summary', {
       qqq_cagr: Math.pow(qg, 1 / n) - 1,
       strategy_growth: sg, qqq_growth: qg,
       win_years: wins,
-      simple_end: full.reduce((a, r) => a + Number(r.end_value), 0),
+      simple_end: full.reduce((a, r) => a + Number(r.end_value), 0), simple_in: n * 10,
       best_year: Number(best.hold_year), best_return: Number(best.strategy_return),
       worst_year: Number(worst.hold_year), worst_return: Number(worst.strategy_return),
       first_year: Number(full[0].hold_year), last_year: Number(full[full.length - 1].hold_year)
@@ -540,6 +557,13 @@ dash.calc('cumulative', {
     }
     return out;
   }
+});
+
+dash.calc('gaps', {
+  inputs: ['yearly'],
+  title: '找不到价格的公司 × 年份',
+  description: '每个选股年的成分股数减去有价格的公司数，加总。',
+  fn: (yearly) => [{ gaps: yearly.reduce((a, r) => a + Number(r.universe) - Number(r.universe_priced), 0) }]
 });
 
 dash.calc('excess', {
@@ -587,11 +611,7 @@ dash.calc('excess', {
     svg.append('g').selectAll('text').data(ticks).join('text')
       .attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end')
       .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => pct(d, 0));
-    const step = W < 520 ? 3 : (W < 760 ? 2 : 1);
-    svg.append('g').selectAll('text').data(rows).join('text')
-      .attr('x', r => x(r.hold_year) + x.bandwidth() / 2).attr('y', H - 8).attr('text-anchor', 'middle')
-      .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)')
-      .text((r, i) => (i % step === 0 || r.partial) ? (r.partial ? r.hold_year + '*' : r.hold_year) : '');
+    window.moXLabels(svg, rows.map((r, i) => ({ x: x(r.hold_year) + x.bandwidth() / 2, text: r.hold_year + (r.partial ? '*' : ''), prio: r.partial ? 2 : (i % 2 === 0 ? 1 : 0) })), H - 8, W);
     const bar = (k, col, key) => svg.append('g').selectAll('rect').data(rows).join('rect')
       .attr('x', r => x(r.hold_year) + xi(key)).attr('width', xi.bandwidth())
       .attr('y', r => y(Math.max(0, r[k]))).attr('height', r => Math.max(1, Math.abs(y(r[k]) - y(0))))
@@ -635,9 +655,7 @@ dash.calc('excess', {
     svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em')
       .attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d + '×');
     const yrs = rows.map(r => r.year);
-    const step = W < 520 ? 4 : (W < 760 ? 3 : 2);
-    svg.append('g').selectAll('text').data(yrs.filter((v, i) => i % step === 0)).join('text')
-      .attr('x', d => x(d)).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d);
+    window.moXLabels(svg, yrs.map((d, i) => ({ x: x(d), text: String(d), prio: i === 0 ? 3 : (i % 2 === 0 ? 1 : 0) })), H - 8, W);
     const line = k => d3.line().x(r => x(r.year)).y(r => y(r[k]));
     const full = rows.filter(r => !r.partial), tail = rows.slice(rows.findIndex(r => r.partial) - 1);
     const hasPartial = rows.some(r => r.partial);
@@ -744,7 +762,8 @@ dash.calc('excess', {
       const set = (f, t) => document.querySelectorAll(`[data-source="summary"][data-field="${f}"]`).forEach(el => { el.textContent = t; unskel(el); });
       set('strategy_cagr', pct(r.strategy_cagr)); set('qqq_cagr', pct(r.qqq_cagr));
       set('win_years', String(r.win_years)); document.getElementById('win-of').textContent = ' / ' + r.years; set('strategy_growth', mult(r.strategy_growth)); set('qqq_growth', mult(r.qqq_growth));
-      set('simple_end', num(r.simple_end));
+      set('simple_end', num(r.simple_end)); set('simple_in', String(r.simple_in));
+      set('years', String(r.years)); set('first_year', String(r.first_year)); set('last_year', String(r.last_year));
       const tk = document.getElementById('takeaway'); unskel(tk); tk.textContent = '';
       const beat = r.strategy_cagr > r.qqq_cagr;
       const parts = [
@@ -755,6 +774,8 @@ dash.calc('excess', {
       parts.forEach(x => { if (Array.isArray(x)) { const bb = document.createElement('b'); bb.textContent = x[0]; bb.dataset.source = 'summary'; bb.dataset.field = x[1]; tk.appendChild(bb); } else tk.append(x); });
     }
     if (p.status === 'ok') { pickRows = p.data; renderPicks(); }
+    const gp = dash.data('gaps');
+    if (gp.status === 'ok' && gp.data.length) document.querySelectorAll('[data-source="gaps"][data-field="gaps"]').forEach(el => { el.textContent = String(gp.data[0].gaps); });
   };
   dash.onData(window.moDraw1);
 
@@ -916,9 +937,7 @@ dash.calc('s3_year_actions', {
       .attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', d => d === 1 ? 'var(--cds-chart-reference)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em')
       .attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d + '×');
-    const step = W < 520 ? 4 : (W < 760 ? 3 : 2);
-    svg.append('g').selectAll('text').data(rows.map(r => r.hold_year).filter((v, i) => i % step === 0)).join('text')
-      .attr('x', d => x(d)).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d);
+    window.moXLabels(svg, rows.map((r, i) => ({ x: x(r.hold_year), text: String(r.hold_year), prio: i === 0 ? 3 : (i % 2 === 0 ? 1 : 0) })), H - 8, W);
     const pi = rows.findIndex(r => r.partial);
     const full = pi < 0 ? rows : rows.slice(0, pi), tail = pi < 0 ? [] : rows.slice(pi - 1);
     S.slice().reverse().forEach(([k, , col], j) => {
@@ -968,11 +987,8 @@ dash.calc('s3_year_actions', {
       .attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', d => d === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em')
       .attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => pct(d, 0));
-    const step = W < 520 ? 3 : (W < 760 ? 2 : 1);
-    svg.append('g').selectAll('text').data(rows).join('text').attr('x', r => x(r.hold_year) + x.bandwidth() / 2).attr('y', H - 8)
-      .attr('text-anchor', 'middle').attr('font-size', 12)
-      .attr('fill', r => r.no_daily ? 'var(--color-warn)' : 'var(--color-fg-muted)')
-      .text((r, i) => (i % step === 0 || r.partial || r.no_daily) ? r.hold_year + (r.partial ? '*' : '') + (r.no_daily ? '⚠' : '') : '');
+    window.moXLabels(svg, rows.map((r, i) => ({ x: x(r.hold_year) + x.bandwidth() / 2, text: r.hold_year + (r.partial ? '*' : '') + (r.no_daily ? '⚠' : ''),
+      prio: r.partial || r.no_daily ? 2 : (i % 2 === 0 ? 1 : 0), fill: r.no_daily ? 'var(--color-warn)' : null })), H - 8, W);
     B.forEach(([k, , col]) => svg.append('g').selectAll('rect').data(rows).join('rect')
       .attr('x', r => x(r.hold_year) + xi(k)).attr('width', xi.bandwidth())
       .attr('y', r => y(Math.max(0, r[k]))).attr('height', r => Math.max(1, Math.abs(y(r[k]) - y(0))))
@@ -1103,7 +1119,7 @@ dash.calc('s3_year_actions', {
       const r = sm.data[0];
       const set = (f, t) => document.querySelectorAll(`#p-top3 [data-source="s3_summary"][data-field="${f}"]`).forEach(el => { el.textContent = t; unskel(el); });
       ['s3', 'plain', 's1', 's2', 'qqq'].forEach(k => { set(k + '_growth', mult(r[k + '_growth'])); set(k + '_cagr', pct(r[k + '_cagr'])); });
-      set('win_years', String(r.win_years)); document.getElementById('t3-win-of').textContent = ' / ' + r.years;
+      set('win_years', String(r.win_years)); document.getElementById('t3-win-of').textContent = ' / ' + r.years; set('years', String(r.years));
       const tk = document.getElementById('t3-take'); unskel(tk); tk.textContent = '';
       const parts = [
         `${r.first_year}–${r.last_year} 年，策略三的 1 个单位滚动到 `, [mult(r.s3_growth), 's3_growth'], `（年化 `, [pct(r.s3_cagr), 's3_cagr'],
@@ -1183,6 +1199,8 @@ dash.calc('s3_year_actions', {
       else ev.push({ buy: i, last: i, days: [i], peak: v, peakI: i });
     }
     ev.forEach((e, k) => { e.n = k + 1; e.key = D[e.buy]; });
+    // 起始日落在一次恐慌中途：起始前 21 个交易日内也有恐慌日，这一次其实更早就开始了
+    if (ev.length) for (let j = s0 - 1; j >= Math.max(0, ev[0].buy - GAP); j--) if (isPanic(j)) { ev[0].cont = D[j]; break; }
     return ev;
   }
   // 从 i 收盘买入资产 a，持有 N 个交易日；返回 {r, partial, sell} 或 null（买入日没有价格）
@@ -1253,9 +1271,14 @@ dash.calc('s3_year_actions', {
     const y1 = d3.scaleLog([Math.min(lo * 0.97, hi / 1.1), Math.max(hi * 1.03, lo * 1.1)], [H1, 8]);
     const y2 = d3.scaleLinear([0, Math.max(30, d3.max(vols.flatMap(s => s.pts.map(p => p[1]))) || 30)], [H1 + GAPY + H2, H1 + GAPY + 6]).nice();
     // 纵轴刻度：涨跌幅，按可见范围挑
-    const cand = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 1, 1.05, 1.1, 1.15, 1.2, 1.3, 1.4, 1.5, 1.75, 2, 2.5, 3, 4, 5, 7.5, 10, 15, 20, 30, 50, 100];
-    let t1 = cand.filter(t => t >= y1.domain()[0] && t <= y1.domain()[1]);
-    while (t1.length > 7) t1 = t1.filter((t, k) => k % 2 === 0 || t === 1);
+    // 从 0% 起往上、往下挑刻度，相邻刻度至少隔 28 像素，间隔大致均匀
+    const cand = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3, 1.4, 1.5, 1.6, 1.75, 2, 2.5, 3, 3.5, 4, 5, 6, 7.5, 10, 15, 20, 30, 50, 100];
+    const inDom = cand.filter(t => t >= y1.domain()[0] && t <= y1.domain()[1]);
+    const t1 = inDom.includes(1) ? [1] : [];
+    const pickT = (arr) => arr.forEach(t => { if (t1.every(u => Math.abs(y1(u) - y1(t)) >= 28)) t1.push(t); });
+    pickT(inDom.filter(t => t > 1)); pickT(inDom.filter(t => t < 1).reverse());
+    if (!t1.length && inDom.length) t1.push(inDom[0]);
+    t1.sort((a, b) => a - b);
     const t2 = y2.ticks(4);
     const probe = svg.append('text').attr('font-size', 12); let lw = 0;
     [...t1.map(t => pct(t - 1, 0)), ...t2.map(String)].forEach(t => { probe.text(t); lw = Math.max(lw, probe.node().getComputedTextLength()); }); probe.remove();
@@ -1277,7 +1300,8 @@ dash.calc('s3_year_actions', {
       band.append('rect').attr('x', x(fe.buy)).attr('width', Math.max(1, x(sell) - x(fe.buy))).attr('y', 8).attr('height', H1 - 8).attr('fill', 'var(--color-fg)').attr('fill-opacity', 0.07);
       [fe.buy, sell].forEach((i, k) => {
         band.append('line').attr('x1', x(i)).attr('x2', x(i)).attr('y1', 8).attr('y2', H1 + GAPY + H2).attr('stroke', 'var(--color-fg)').attr('stroke-dasharray', k ? '3 3' : null).attr('stroke-opacity', 0.6);
-        band.append('text').attr('x', x(i) + (k ? -4 : 4)).attr('y', 20).attr('text-anchor', k ? 'end' : 'start').attr('font-size', 11).attr('fill', 'var(--color-fg)').text((k ? '卖出 ' : '买入 ') + D[i]);
+        band.append('text').attr('x', x(i) + (k ? -4 : 4)).attr('y', 20).attr('text-anchor', k ? 'end' : 'start').attr('font-size', 11).attr('fill', 'var(--color-fg)')
+          .text(k ? (fe.buy + N > i1 ? '至今 ' + D[i] + '（未满）' : '卖出 ' + D[i]) : '买入 ' + D[i]);
       });
     }
     // 网格和刻度
@@ -1293,8 +1317,10 @@ dash.calc('s3_year_actions', {
     const unit = spanDays > 3 * 365 ? 4 : (spanDays > 120 ? 7 : 10);   // 比较日期字符串的前几位
     const bounds = []; for (let i = vs + 1; i <= ve; i++) if (D[i].slice(0, unit) !== D[i - 1].slice(0, unit)) bounds.push(i);
     const stepT = Math.max(1, Math.ceil(bounds.length / Math.max(2, Math.floor((W - m.l - m.r) / 62))));
-    bounds.filter((b, k) => k % stepT === 0).forEach(i => g.append('text').attr('x', x(i)).attr('y', H - 6).attr('text-anchor', x(i) > W - m.r - 24 ? 'end' : 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)')
-      .text(unit === 4 ? D[i].slice(0, 4) : (unit === 7 ? D[i].slice(0, 7) : D[i].slice(5))));
+    // 显示到日时，第一个刻度和跨年后的第一个刻度带上年份
+    const kept = bounds.filter((b, k) => k % stepT === 0);
+    window.moXLabels(g, kept.map((i, k) => ({ x: x(i), prio: 1,
+      text: unit === 4 ? D[i].slice(0, 4) : (unit === 7 ? D[i].slice(0, 7) : (k === 0 || D[i].slice(0, 4) !== D[kept[k - 1]].slice(0, 4) ? D[i] : D[i].slice(5))) })), H - 6, W);
     const thin = (arr) => { const step = Math.max(1, Math.floor(arr.length / (W * 1.5))); return arr.filter((p, k) => k % step === 0 || k === arr.length - 1); };
     pr.forEach(s => plot.append('path').datum(thin(s.pts)).attr('d', d3.line().x(p => x(p[0])).y(p => y1(p[1]))).attr('fill', 'none').attr('stroke', priceColor(s.a)).attr('stroke-width', 1.75).attr('stroke-linejoin', 'round'));
     vols.forEach(s => {
@@ -1335,6 +1361,9 @@ dash.calc('s3_year_actions', {
       .on('mouseleave', () => { tip.style('opacity', 0); guide.style('opacity', 0); })
       .on('wheel', ev_ => {
         ev_.preventDefault();
+        if (Math.abs(ev_.deltaX) > Math.abs(ev_.deltaY)) {   // 触控板左右滑动：平移
+          const k = (ve - vs) / (W - m.l - m.r); setView(vs + ev_.deltaX * k, ve + ev_.deltaX * k); return;
+        }
         const [px] = d3.pointer(ev_, el); const c = x.invert(px);
         const f = Math.exp(Math.max(-0.5, Math.min(0.5, (ev_.deltaY || 0) * 0.0015)));
         const span = (ve - vs) * f;
@@ -1405,7 +1434,9 @@ dash.calc('s3_year_actions', {
     document.getElementById('pn-sum-h').textContent = '恐慌买入、持有 ' + fmtM(st.hold) + '的收益';
     const done = on.filter(e => { const r = evReturn(e, 'qqq', N); return r && !r.partial; }).length;
     document.getElementById('pn-sum-note').textContent = '从 ' + D[s0] + ' 起，按 ' + st.src.toUpperCase() + ' 过去 ' + WIN() + ' ' + st.thr + ' 分位的标准，共 ' + ev.length + ' 次恐慌，计入统计 ' + on.length + ' 次（其中已满持有时间的 ' + done + ' 次，各资产按自己有数据的次数计）。'
-      + (st.mode === 'first' ? '每次在第一个恐慌日收盘买入。' : '每次恐慌里每个恐慌日各买一份，收益取平均。') + '“恐慌买入 · 平均”超过“随便哪天买”时加粗。';
+      + (st.mode === 'first' ? '每次在第一个恐慌日收盘买入。' : '每次恐慌里每个恐慌日各买一份，收益取平均。') + '“恐慌买入 · 平均”超过“随便哪天买”时加粗。'
+      + (ev.length && ev[0].cont ? '最早那一次恐慌在起始时间之前就开始了（' + ev[0].cont + ' 已是恐慌日），这里从起始后的第一个恐慌日算起。' : '')
+      + (() => { const f = R.findIndex(r => r[PF(st.src)] != null); return f > s0 ? st.src.toUpperCase() + ' 的过去 ' + WIN() + '百分位从 ' + D[f] + ' 起才有，之前的日子不会被识别为恐慌。' : ''; })();
     // 还在持有中的：按最新价格算浮动盈亏
     const open = on.map(e => ({ e, rs: ASSETS.map(([a]) => evReturn(e, a, N)) })).filter(o => o.rs.some(r => r && r.partial));
     const ob = document.getElementById('pn-open'); ob.hidden = !open.length;
@@ -1432,7 +1463,7 @@ dash.calc('s3_year_actions', {
     if (q.rs.length && q.b) {
       const av = d3.mean(q.rs), w = q.rs.filter(r => r > 0).length, B = t => { const b = document.createElement('b'); b.textContent = t; return b; };
       tk.append('从 ' + D[s0] + ' 起共 ', B(ev.length + ' 次'), '恐慌。' + (st.mode === 'first' ? '每次在第一天' : '每次在恐慌期间分批') + '买入 QQQ、持有 ' + fmtM(st.hold) + '，平均 ', B(pct(av)),
-        '，' + q.rs.length + ' 次里 ' + w + ' 次赚钱，最差 ', B(pct(d3.min(q.rs))), '；同期随便哪天买入、持有同样时间，平均 ', B(pct(q.b.avg)), '。');
+        '，' + q.rs.length + ' 次里 ' + w + ' 次赚钱，最差的一次 ', B(pct(d3.min(q.rs))), '；同期随便哪天买入、持有同样时间，平均 ', B(pct(q.b.avg)), '。');
       tk.append(av > q.b.avg + 0.02 ? '恐慌买入明显更好。' : (av < q.b.avg - 0.02 ? '恐慌买入反而更差。' : '两者差不多。'));
     } else tk.append('所选时间里没有已满持有时间的恐慌，可以把起始时间调早，或者缩短持有时间、降低门槛。');
     // 事件表
@@ -1442,7 +1473,7 @@ dash.calc('s3_year_actions', {
       const add = (t, c) => { const td = document.createElement('td'); td.textContent = t; if (c) td.className = c; tr.appendChild(td); return td; };
       const td0 = add('', 'l'); const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !st.off.has(e.key); cb.setAttribute('aria-label', '计入第 ' + e.n + ' 次恐慌');
       cb.addEventListener('click', ev_ => ev_.stopPropagation()); cb.addEventListener('change', () => { cb.checked ? st.off.delete(e.key) : st.off.add(e.key); draw(); }); td0.appendChild(cb);
-      add(String(e.n), 'l'); add(D[e.buy], 'l'); add(String(e.days.length));
+      add(String(e.n), 'l'); add(D[e.buy] + (e.cont ? '（起始前已开始）' : ''), 'l'); add(String(e.days.length));
       const v = R[e.buy][st.src], p = R[e.buy][PF(st.src)]; add(v.toFixed(1) + '（' + Math.round(p) + '）'); add(e.peak.toFixed(1) + '（' + D[e.peakI].slice(5) + '）', 'join');
       let lastSell = null;
       ASSETS.forEach(([a]) => { const r = evReturn(e, a, N); if (!r) { add('—'); return; } lastSell = Math.max(lastSell ?? 0, r.sell); add(pct(r.r) + (r.partial ? '（持有中）' : ''), r.partial ? 'part' : (r.r >= 0 ? 'up' : 'down')); });
@@ -1594,9 +1625,7 @@ dash.calc('s3_year_actions', {
     const stepT = Math.max(1, Math.ceil(bounds.length / nT));
     const tix = bounds.filter((b, k) => k % stepT === 0);
     svg.append('g').selectAll('line').data(tix).join('line').attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', H - 24).attr('y2', H - 20).attr('stroke', 'var(--cds-chart-axis)');
-    svg.append('g').selectAll('text').data(tix).join('text').attr('x', d => x(d)).attr('y', H - 8)
-      .attr('text-anchor', d => x(d) > W - m.r - 24 ? 'end' : 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)')
-      .text(d => byYear ? cal[d].slice(0, 4) : cal[d].slice(0, 7));
+    window.moXLabels(svg, tix.map(d => ({ x: x(d), text: byYear ? cal[d].slice(0, 4) : cal[d].slice(0, 7), prio: 1 })), H - 8, W);
     const thin = (arr) => { const step = Math.max(1, Math.floor(arr.length / (W * 1.5))); return arr.filter((p, k) => k % step === 0 || k === arr.length - 1); };
     S.forEach((st, k) => {
       const ln = d3.line().x(p => x(p[0])).y(p => y(p[1]));
@@ -1807,9 +1836,7 @@ dash.calc('s3_year_actions', {
       .attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', d => d === 1 ? 'var(--cds-chart-reference)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em')
       .attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d + '×');
-    const step = W < 520 ? 4 : (W < 760 ? 3 : 2);
-    svg.append('g').selectAll('text').data(rows.map(r => r.hold_year).filter((v, i) => i % step === 0)).join('text')
-      .attr('x', d => x(d)).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d);
+    window.moXLabels(svg, rows.map((r, i) => ({ x: x(r.hold_year), text: String(r.hold_year), prio: i === 0 ? 3 : (i % 2 === 0 ? 1 : 0) })), H - 8, W);
     const pi = rows.findIndex(r => r.partial);
     const full = pi < 0 ? rows : rows.slice(0, pi), tail = pi < 0 ? [] : rows.slice(pi - 1);
     S.slice().reverse().forEach(([k, , col]) => {
@@ -1857,10 +1884,7 @@ dash.calc('s3_year_actions', {
       .attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', d => d === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(ticks).join('text').attr('x', m.l - 6).attr('y', d => y(d)).attr('dy', '0.32em')
       .attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => pct(d, 0));
-    const step = W < 520 ? 3 : (W < 760 ? 2 : 1);
-    svg.append('g').selectAll('text').data(rows).join('text').attr('x', r => x(r.hold_year) + x.bandwidth() / 2).attr('y', H - 8)
-      .attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)')
-      .text((r, i) => (i % step === 0 || r.partial) ? r.hold_year + (r.partial ? '*' : '') : '');
+    window.moXLabels(svg, rows.map((r, i) => ({ x: x(r.hold_year) + x.bandwidth() / 2, text: r.hold_year + (r.partial ? '*' : ''), prio: r.partial ? 2 : (i % 2 === 0 ? 1 : 0) })), H - 8, W);
     [['hold_return', a, 's'], ['qqq_return', b, 'q']].forEach(([k, col, key]) => svg.append('g').selectAll('rect').data(rows).join('rect')
       .attr('x', r => x(r.hold_year) + xi(key)).attr('width', xi.bandwidth())
       .attr('y', r => y(Math.max(0, r[k]))).attr('height', r => Math.max(1, Math.abs(y(r[k]) - y(0))))
@@ -1931,6 +1955,7 @@ dash.calc('s3_year_actions', {
       set('cagr', pct(r.cagr)); set('qqq_cagr', pct(r.qqq_cagr)); set('win_years', String(r.win_years));
       document.getElementById('t2-win-of').textContent = ' / ' + r.years;
       set('growth', mult(r.growth)); set('top10_growth', mult(r.top10_growth)); set('qqq_growth', mult(r.qqq_growth));
+      set('years', String(r.years)); set('first_year', String(r.first_year)); set('last_year', String(r.last_year));
       const tk = document.getElementById('t2-take'); unskel(tk); tk.textContent = '';
       const parts = [
         `${r.first_year}–${r.last_year} 年，全仓第一名的 1 个单位滚动到 `, [mult(r.growth), 'growth'], `，年化 `, [pct(r.cagr), 'cagr'],
