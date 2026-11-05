@@ -1123,11 +1123,17 @@ dash.calc('s3_year_actions', {
       .attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(fmtY);
     // x ticks: years or months
     const span = Date.parse(cal[i1]) - Date.parse(cal[i0]);
-    const nT = Math.max(2, Math.floor((W - m.l - m.r) / 80));
-    const tix = d3.range(nT).map(k => Math.round(i0 + (i1 - i0) * k / (nT - 1)));
+    // 刻度对齐到每年（区间超过 3 年）或每月的第一个交易日，标签不会重复
+    const nT = Math.max(2, Math.floor((W - m.l - m.r) / 64));
+    const byYear = span > 3 * 365 * 864e5;
+    const bounds = [];
+    for (let i = i0 + 1; i <= i1; i++) if (cal[i].slice(0, byYear ? 4 : 7) !== cal[i - 1].slice(0, byYear ? 4 : 7)) bounds.push(i);
+    const stepT = Math.max(1, Math.ceil(bounds.length / nT));
+    const tix = bounds.filter((b, k) => k % stepT === 0);
+    svg.append('g').selectAll('line').data(tix).join('line').attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', H - 24).attr('y2', H - 20).attr('stroke', 'var(--cds-chart-axis)');
     svg.append('g').selectAll('text').data(tix).join('text').attr('x', d => x(d)).attr('y', H - 8)
-      .attr('text-anchor', (d, k) => k === 0 ? 'start' : (k === tix.length - 1 ? 'end' : 'middle')).attr('font-size', 12).attr('fill', 'var(--color-fg-muted)')
-      .text(d => span > 3 * 365 * 864e5 ? cal[d].slice(0, 4) : cal[d].slice(0, 7));
+      .attr('text-anchor', d => x(d) > W - m.r - 24 ? 'end' : 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)')
+      .text(d => byYear ? cal[d].slice(0, 4) : cal[d].slice(0, 7));
     const thin = (arr) => { const step = Math.max(1, Math.floor(arr.length / (W * 1.5))); return arr.filter((p, k) => k % step === 0 || k === arr.length - 1); };
     S.forEach((st, k) => {
       const ln = d3.line().x(p => x(p[0])).y(p => y(p[1]));
