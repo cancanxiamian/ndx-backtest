@@ -1140,6 +1140,28 @@ dash.calc('s3_year_actions', {
   const st = { view: null, src: 'vix', win: '3', thr: 90, hold: 6, start: null, mode: 'first', show: { qqq: true, spy: true, soxx: true, vix: true, vxn: true }, off: new Set(), focus: null };
   let built = false, R = null, D = null;
 
+  // 刷新后保留设置：设置写进网页地址 # 后面（dash.setLink），加载时读回来。
+  // 格式：<标签页>.h<持有月数>.t<门槛>.w<1|3>.s<v|n>.m<f|e>.d<r|YYYYMMDD>.q<五位 0/1>，只用字母、数字、点和横线
+  const RAWLINK = (() => { try { return decodeURIComponent(location.hash.slice(1)); } catch { return location.hash.slice(1); } })();
+  const SHOWKEYS = ['qqq', 'spy', 'soxx', 'vix', 'vxn'];
+  let pendingSfx = '';
+  (() => {
+    const parts = RAWLINK.split('.'); if (parts.length < 2) return;
+    pendingSfx = parts.slice(1).join('.');
+    parts.slice(1).forEach(p => {
+      const k = p[0], v = p.slice(1);
+      if (k === 'h' && /^\d{1,2}$/.test(v)) st.hold = Math.min(36, Math.max(1, +v));
+      else if (k === 't' && /^\d{2}$/.test(v)) st.thr = Math.min(99, Math.max(80, +v));
+      else if (k === 'w' && (v === '1' || v === '3')) st.win = v;
+      else if (k === 's' && (v === 'v' || v === 'n')) st.src = v === 'v' ? 'vix' : 'vxn';
+      else if (k === 'm' && (v === 'f' || v === 'e')) st.mode = v === 'f' ? 'first' : 'each';
+      else if (k === 'd' && /^\d{8}$/.test(v)) st.start = v.slice(0, 4) + '-' + v.slice(4, 6) + '-' + v.slice(6);
+      else if (k === 'q' && /^[01]{5}$/.test(v)) SHOWKEYS.forEach((a, i) => { st.show[a] = v[i] === '1'; });
+    });
+  })();
+  window.moPanicState = () => !D ? pendingSfx : ['h' + st.hold, 't' + st.thr, 'w' + st.win, 's' + (st.src === 'vix' ? 'v' : 'n'), 'm' + (st.mode === 'first' ? 'f' : 'e'),
+    'd' + (!st.start || st.start === rel2() ? 'r' : st.start.replace(/-/g, '')), 'q' + SHOWKEYS.map(a => st.show[a] ? 1 : 0).join('')].join('.');
+
   const priceColor = (a) => ({ qqq: dash.colors[0], spy: dash.colors[1], soxx: dash.colors[2] })[a];
   const volNormal = () => css('--cds-chart-muted', '#999');
   const volPanic = () => css('--cds-chart-status-critical', '#d33');
@@ -1430,6 +1452,7 @@ dash.calc('s3_year_actions', {
     });
     document.getElementById('pn-ev-h').textContent = '每一次恐慌（' + ev.length + ' 次）';
     const ch = document.getElementById('pn-chart'); unskel(ch); drawChart(ch, s0, ev);
+    if (window.moLinkSoon) window.moLinkSoon();
   }
 
   window.moBuildPanic = () => {
@@ -1462,7 +1485,7 @@ dash.calc('s3_year_actions', {
     if (d.status !== 'ok') return;
     if (!R) {
       R = d.data; D = R.map(r => r.d);
-      if (!st.start) st.start = rel2();
+      if (!st.start || !/^\d{4}-\d{2}-\d{2}$/.test(st.start) || st.start < D[0] || st.start > D[D.length - 1]) st.start = rel2();
       MONTHS = D.filter((d, i) => i === 0 || d.slice(0, 7) !== D[i - 1].slice(0, 7));
       const last = k => { for (let i = R.length - 1; i >= 0; i--) if (R[i][k] != null) return R[i].d; return '—'; };
       document.getElementById('pn-ends').textContent = 'QQQ ' + last('qqq') + '，标普500（SPY）' + last('spy') + '，费城半导体（SOXX）' + last('soxx') + '，VIX ' + last('vix') + '，VXN ' + last('vxn');
@@ -1921,6 +1944,10 @@ dash.calc('s3_year_actions', {
 
   const tabs = { 'p-top10': document.getElementById('tab-top10'), 'p-top1': document.getElementById('tab-top1'), 'p-top3': document.getElementById('tab-top3'), 'p-pk': document.getElementById('tab-pk'), 'p-panic': document.getElementById('tab-panic') };
   const draws = { 'p-top10': () => window.moDraw1(), 'p-top1': () => window.moDraw2(), 'p-top3': () => window.moDraw3(), 'p-pk': () => window.moDrawPK(), 'p-panic': () => window.moDrawPanic() };
+  let linkT = 0;
+  const curTab = () => Object.keys(tabs).find(pid => tabs[pid].getAttribute('aria-selected') === 'true') || 'p-top10';
+  window.moLink = () => { const s = window.moPanicState ? window.moPanicState() : ''; dash.setLink(curTab() + (s ? '.' + s : '')); };
+  window.moLinkSoon = () => { clearTimeout(linkT); linkT = setTimeout(window.moLink, 400); };
   function show(id, link = true) {
     Object.entries(tabs).forEach(([pid, btn]) => {
       const on = pid === id;
@@ -1931,7 +1958,7 @@ dash.calc('s3_year_actions', {
     if (id === 'p-top3') window.moBuild3();
     if (id === 'p-pk') window.moBuildPK();
     if (id === 'p-panic') window.moBuildPanic();
-    if (link) dash.setLink(id);
+    if (link) window.moLink();
     draws[id]();
   }
   Object.entries(tabs).forEach(([pid, btn]) => btn.addEventListener('click', () => show(pid)));
@@ -1942,11 +1969,12 @@ dash.calc('s3_year_actions', {
     const next = ids[(cur + (ev.key === 'ArrowRight' ? 1 : ids.length - 1)) % ids.length];
     show(next); tabs[next].focus();
   });
-  const h = location.hash.slice(1);
+  const hraw = (() => { try { return decodeURIComponent(location.hash.slice(1)); } catch { return location.hash.slice(1); } })();
+  const h = hraw.split('.')[0];
   if (['p-top1', 'p-top3', 'p-pk', 'p-panic'].includes(h)) show(h, false);
   else {
-    const named = document.getElementById(h);
-    if (named) setTimeout(() => { named.scrollIntoView(); dash.setLink(named.id); }, 300);
+    const named = h ? document.getElementById(h) : null;
+    if (named) setTimeout(() => { named.scrollIntoView(); }, 300);
   }
 })();
 </script>
