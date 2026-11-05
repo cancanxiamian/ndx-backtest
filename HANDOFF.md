@@ -20,6 +20,7 @@
 - 标签页二 `p-top1`：策略二，全仓上一年第一名。内容在 `<template id="tpl-top1">`，第一次打开时才克隆。
 - 标签页三 `p-top3`：策略三，前三等权 + 回撤减半 + 8% 止损。内容在 `<template id="tpl-top3">`，数据集 `datasets/s3_yearly`、`datasets/s3_picks`（`s3.py` 生成）。
 - 标签页四 `p-pk`：股票 PK，用户自选最多 8 只股票和日期区间对比。内容在 `<template id="tpl-pk">`；数据集 `datasets/pk_prices`、`datasets/pk_calendar`（`pk.py` 生成，日线对数价差分编码）。所选股票和日期存在页面参数 `pk_tickers`、`pk_start`、`pk_end`，只在页面里计算，不重新取数。
+- 标签页五 `p-panic`：恐慌时买入。内容在 `<template id="tpl-panic">`；数据集 `datasets/panic_daily`（`panic.py` 生成：VIX、VXN 及其 3 年百分位，QQQ、SPY、SOXX 日线）。持有时间、门槛、指标、买入方式、起始时间、显示哪些线都是页面内的状态。
 - 新策略继续加标签页，不要改动已有标签页。
 
 ## 策略口径
@@ -66,6 +67,7 @@ pip install yfinance pandas requests lxml
 | `bt2.py` | 策略一，生成 `yearly.csv`、`picks.csv`、`gaps.json`，也是其他脚本引用的核心 |
 | `s2.py` | 策略二，生成 `top1.csv` |
 | `pk.py` | 股票 PK 标签页的数据，生成 `pk_prices.json`、`pk_calendar.json` |
+| `panic.py` | 恐慌时买入标签页的数据，生成 `panic_daily.json`；原始文件在 `data_src/`（GitHub 转存的 QQQ、SPY、SOXX，来源写在脚本开头） |
 | `vxn.csv` | VXN 日收盘，2001-02-02 至 2026-10-20：2009-09-14 起是 Cboe 官方格式文件（GitHub rellis3/MacroFXModel 转存，与另两份转存逐日一致），之前是 FRED VXNCLS（GitHub NemesiP/volatility-forecasting 转存）；2010-04-27 的 Cboe 值是重复的旧值，改用 FRED。`source` 列标明出处 |
 | `vix.py` | 用 VIX 管理 QQQ 仓位的各种做法（`--sens`、`--fear`、`--pct`），只打印；VIX 数据在 `vix.csv` |
 | `s3.py` | 策略三（前三 + 回撤减半 + 止损），用日线逐日模拟，生成 `s3_yearly.csv`、`s3_picks.csv` |
